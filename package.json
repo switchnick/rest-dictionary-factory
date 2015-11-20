@@ -1,0 +1,26 @@
+{
+  "name": "rest-dictionary-factory",
+  "version": "1.0.0",
+  "description": "A Node site that provides a UI for building dictionaries to be used with the generic-rest-connector for Qlik Sense",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/switchnick/rest-dictionary-factory.git"
+  },
+  "keywords": [
+    "qlik",
+    "sense",
+    "rest",
+    "connector",
+    "dictionary"
+  ],
+  "author": "Nick Webster",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/switchnick/rest-dictionary-factory/issues"
+  },
+  "homepage": "https://github.com/switchnick/rest-dictionary-factory"
+}
