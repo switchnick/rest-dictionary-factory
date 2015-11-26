@@ -1,0 +1,10 @@
+include ../header.jade
+div.container.page
+  h1 Give your dictionary a name
+  form(action="/create" method="POST")
+    input.form-control(placeholder="Dictionary Name" name="name" required)
+    p.description On clicking 'Create', a new GitHub public repository will be created on your account. The repository name will be the same as specified above but in lowercase with spaces replaced by hypens.
+      br
+      | For example, 'My REST Dictionary' will create a repo called 'my-rest-dictionary'
+    button(type="submit").primary-button Create
+include ../footer.jade

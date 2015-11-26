@@ -1,0 +1,66 @@
+@import "colours.less";
+
+body{
+  font-family: sans-serif, helvetica, arial;
+  font-weight: lighter;
+  color: @default-text;
+}
+
+.page{
+  margin-top: 50px;
+}
+
+.content{
+  padding: 10px 0px;
+}
+
+.primary-button, .secondary-button{
+  display: block;
+  width: 200px;
+  padding: 5px;
+  height: 35px;
+  line-height: 26px;
+  text-align: center;
+  border-radius: 3px;
+  font-weight: normal;
+  border: none;
+}
+
+.primary-button{
+  background-color: @secondary-accent;
+  color: @secondary;
+}
+
+.secondary-button{
+  background-color: @accent;
+  color: @primary;
+}
+
+.title{
+  font-size: 20px;
+  font-weight: normal;
+}
+
+h1{
+  font-size: 20px;
+  color: @primary;
+}
+h2{
+  font-size: 20px;
+  color: @accent;
+}
+h3{
+
+}
+
+ul{
+  list-style-type: none;
+}
+
+.description{
+  padding: 10px 0px;
+}
+
+@import "header.less";
+@import "home.less";
+@import "login.less";
