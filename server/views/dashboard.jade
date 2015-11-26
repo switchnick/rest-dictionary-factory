@@ -2,4 +2,15 @@ include ./header.jade
 div.container.page  
   h1 My Dictionaries
   a(href="/new").primary-button Create New Dictionary
+  .content
+    .row
+      each dic in dictionaries      
+        .col-md-3
+          .card.dictionary
+            a.title #{dic.display_name}
+            .icon
+              img(src="#{dic.icon}")    
+            .actions
+              .download download
+              div(data-repo="#{dic.name}").delete delete
 include ./footer.jade

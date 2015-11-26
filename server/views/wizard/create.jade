@@ -1,5 +1,6 @@
 include ../header.jade
-div.container.page
+include ../errorbanner.jade
+div.container
   h1 Give your dictionary a name
   form(action="/create" method="POST")
     input.form-control(placeholder="Dictionary Name" name="name" required)

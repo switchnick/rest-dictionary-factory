@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/switchnick/rest-dictionary-factory",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "bootstrap": "^3.3.5",
     "connect-flash": "^0.1.1",
     "express": "^4.13.3",
