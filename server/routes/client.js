@@ -1,8 +1,10 @@
 var express = require('express'),
     router = express.Router(),
     Auth = require('../controllers/auth'),
+    Error = require('../controllers/error'),
     Dictionary = require('../controllers/dictionaries'),
     GitHelper = require('../controllers/git-helper'),
+    MongoHelper = require('../controllers/mongo-helper'),
     Defaults = require('../../defaults'),
     fs = require('fs'),
     MongoHelper = require('../controllers/mongo-helper');
@@ -10,9 +12,10 @@ var express = require('express'),
 
 //client routes
 router.get('/', function(req, res){
-  res.render('index.jade', {user: req.user});
+  res.render('index.jade', {user: req.user, error: req.flash('error')});
 });
 router.get('/login', function(req, res){
+  console.log('here');
   res.render('login.jade', {user: req.user});
 });
 router.get('/dashboard', Auth.isLoggedIn, function(req, res, next){
@@ -30,6 +33,21 @@ router.get('/dashboard', Auth.isLoggedIn, function(req, res, next){
 router.get('/new', Auth.isLoggedIn, function(req, res, next){
   res.render('wizard/create.jade', {user: req.user});
 });
+router.get('/general/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', defaults: Defaults});
+});
+router.get('/authentication/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  var am = req.session.dictionary.auth_method;
+  am = am.toLowerCase().replace(/\s/g, "-");
+  res.render('wizard/auth/'+am+'.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults});
+});
+router.get('/paging/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  res.render('wizard/paging.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'paging', defaults: Defaults});
+});
+router.get('/schema/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  res.render('wizard/schema.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'schema', defaults: Defaults});
+});
+
 
 //api routes
 router.post('/create', Auth.isLoggedIn, function(req, res, next){
@@ -46,7 +64,8 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
       var dicData = {
         name: repo.name,
         display_name: repo.name,
-        owner: repo.owner.login
+        owner: repo.owner.login,
+        auth_method: "None"
       }
       Dictionary.create(dicData, function(err, response){
         if(err){
@@ -63,7 +82,7 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
             message: "Initial Dictionary"
           };
           GitHelper.createContent(req, res, jsonContent, function(content){
-            response.dictionary = content.content.download_url;
+            response.dictionary = content.content.path;
             var iconurl = "./default-icon.png";
             var icon = fs.readFileSync(iconurl);
             console.log(icon);
@@ -86,7 +105,7 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
                   res.render('wizard/create.jade', {user: req.user, error: req.flash('error')});
                 }
                 else {
-                  res.render('wizard/general.jade', {user: req.user, dictionary: response, repo: repo});
+                  res.redirect('/general/'+response._id);
                 }
               });
             });

@@ -6,7 +6,8 @@ var schema = new Schema({
   display_name: String,
   owner: String,
   dictionary: String,
-  icon: String
+  icon: String,
+  public: Boolean
 });
 
 module.exports = mongoose.model('dictionaries', schema)

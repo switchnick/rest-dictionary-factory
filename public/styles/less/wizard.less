@@ -1,5 +1,38 @@
 .dictionary-nav{
-  li{
+  .nav-button{
+    height: 60px;
     display: inline-block;
+    line-height: 50px;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+    color: @accent;
+    a{
+      color: @accent;
+    }
+    &.active{
+      color: @primary;
+      box-shadow: 0px 0px 5px @primary;
+      a{
+        color: @primary;
+      }
+    }
+    &:hover{
+      box-shadow: 0px 0px 5px @accent;
+    }
+  }
+}
+
+.general{
+  .icon{
+    img{
+      max-width: 150px;
+    }
+  }
+}
+
+.wizard{
+  .save-successful{
+    color: @green;
   }
 }

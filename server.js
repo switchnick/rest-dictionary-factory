@@ -18,6 +18,7 @@ mongoose.connect('mongodb://principal:principal%@ds041404.mongolab.com:41404/her
 require('./server/controllers/passport/passport.js')(passport, config);
 
 var clientRoutes = require(__dirname+'/server/routes/client');
+var apiRoutes = require(__dirname+'/server/routes/api');
 var authRoutes = require(__dirname+'/server/routes/auth');
 
 app.set('views', __dirname+'/server/views');
@@ -39,6 +40,7 @@ app.use('/scripts', express.static(__dirname + '/public/scripts/build'));
 app.use('/resources', express.static(__dirname + '/public/resources'));
 
 app.use('/', clientRoutes);
+app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 
 app.listen(process.env.PORT || 4000);

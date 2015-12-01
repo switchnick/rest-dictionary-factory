@@ -7,7 +7,8 @@ module.exports = function(passport, config){
       clientSecret: config.github.secret,
       scope: 'public_repo'
     },
-    function(accessToken, refreshToken, profile, done) {      
+    function(accessToken, refreshToken, profile, done) {
+      console.log('uugh');    
       profile.token = accessToken;
       // asynchronous verification, for effect...
       process.nextTick(function () {

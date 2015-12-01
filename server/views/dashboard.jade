@@ -7,7 +7,8 @@ div.container.page
       each dic in dictionaries      
         .col-md-3
           .card.dictionary
-            a.title #{dic.display_name}
+            a(href="/general/#{dic._id}").title #{dic.display_name}
+            a.sub-title #{dic.owner}
             .icon
               img(src="#{dic.icon}")    
             .actions

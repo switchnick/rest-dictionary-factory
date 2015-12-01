@@ -1,0 +1,23 @@
+include ../header.jade
+include ./navigation.jade
+include ../errorbanner.jade
+.container.wizard.general
+  h1 #{info.display_name}
+  h2 How do you page?
+  .row
+    .col-md-12
+      label Paging Method
+      select.form-control
+        for page in defaults.paging_methods
+          option(selected=dictionary.paging_method==page.name) #{page.name}
+      p.hint Explanation goes here
+      case dictionary.paging_method
+        when "Pages"
+          include ./paging/pages.jade
+        when "Offset/Limit"
+          include ./paging/offset_limit.jade
+        when "Supplied Url"
+          include ./paging/url.jade
+        default
+          include ./paging/boilerplate.jade    
+include ../footer.jade

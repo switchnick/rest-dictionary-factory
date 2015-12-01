@@ -1,0 +1,8 @@
+include ../../header.jade
+include ../navigation.jade
+include ../../errorbanner.jade
+.container.wizard
+  h1 #{info.display_name}
+  h2 Basic Authentication
+  p.hint #{defaults.auth_methods.basic.description}
+include ../../footer.jade
