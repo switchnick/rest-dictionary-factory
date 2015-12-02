@@ -1,0 +1,10 @@
+h2 Paging with Offset & Limit
+label Offset URL Parameter
+input.form-control(placeholder="Where do I begin?" value="#{dictionary.paging_options.offset_url_parameter || ''}" data-provider="github" data-prop="paging_options.offset_url_parameter")
+p.hint This should be the name of the URL parameter required to specify the record offset, or in other words which record number to start from. The connector will always start at 0 and use the specified <strong>Batch Size</strong> to calculate the offset for subsequent pages.
+label Limit URL Parameter
+input.form-control(placeholder="When will it end?" value="#{dictionary.paging_options.limit_url_parameter || ''}" data-provider="github" data-prop="paging_options.limit_url_parameter")
+p.hint This should be the name of the URL parameter required to specify the record limit, or in other words which record number to end with.
+label Batch Size
+input.form-control(placeholder="How many?" value="#{dictionary.paging_options.batch_size || ''}" data-provider="github" data-prop="paging_options.batch_size")
+p.hint The number of records to download with each request. This number will be used to calculate the <strong>Offset</strong> value.

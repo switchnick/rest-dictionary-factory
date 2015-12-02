@@ -1,9 +1,45 @@
 include ../header.jade
 include ./navigation.jade
 include ../errorbanner.jade
+include ../autodetect-auth.jade
 .container.wizard.general
   h1 #{info.display_name}
-  h2 Tell us about your RESTful source
+  h2 How do I look?
   .row
-    .col-md-12
+    .col-md-3
+      h3 Tables
+      form(action="/api/newtable/#{info._id}" method="post")
+        button.secondary-button(type="submit") Add Table 
+        br
+        each table, index in dictionary.tables
+          .table-card(data-index='#{index}').card
+            h3 #{table.qName}
+            span.sub-title /#{table.endpoint || ''}
+    .col-md-9
+      .row
+        if tableIndex
+          .col-md-6          
+            h3 Basic Table Info
+            label Table name
+            input.form-control(value="#{dictionary.tables[tableIndex].qName}" data-provider="github" data-prop="tables.#{tableIndex}.qName")
+            label Endpoint
+            input.form-control(value="#{dictionary.tables[tableIndex].endpoint || ''}" data-provider="github" data-prop="tables.#{tableIndex}.endpoint")
+            p.hint This is the URL Endpoint where the data exists
+          .col-md-6
+            h3 Advanced
+            
+          .col-md-12
+            h3 Fields
+            button.inline.primary-button.auto-detect Auto Detect
+            button.inline.secondary-button Add Field
+            .spacer
+            if dictionary.tables[tableIndex].fields
+              each field, index in dictionary.tables[tableIndex].fields
+                .col-md-12
+                  | #{field.qName}
+            else
+              h3 No fields
+        else
+          col-md-12
+            h2 Select a Table to work with
 include ../footer.jade

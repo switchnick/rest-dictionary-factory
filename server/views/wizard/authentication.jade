@@ -1,0 +1,28 @@
+include ../header.jade
+include ./navigation.jade
+include ../errorbanner.jade
+.container.wizard.general
+  h1 #{info.display_name}
+  h2 What's the magic word?
+  .row
+    for auth in defaults.auth_methods
+      .col-md-3
+        div(class='card' class='auth-method' class=dictionary.auth_method==auth.name?'active':'' data-provider='github' data-prop='auth_method' data-item='#{auth.name}')
+          .auth-type
+            h3 #{auth.name}
+          .auth-desc
+            p.hint #{auth.description}
+  .row
+    .col-md-12
+      case dictionary.auth_method
+        when "None"
+          include ./auth/none.jade
+        when "Basic"
+          include ./auth/basic.jade
+        when "API Key"
+          include ./auth/api-key.jade
+        when "OAuth"
+          include ./auth/oauth.jade
+        default
+          include ./auth/none.jade                  
+include ../footer.jade

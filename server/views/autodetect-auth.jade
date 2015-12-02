@@ -1,0 +1,13 @@
+.autodetect-auth-container.smokescreen(style='display:none;')
+  .autodetect-auth.card
+    h3 Auto Detect
+    p.hint In order to successfully auto detect the fields inside the selected table please provide the following information.
+    label Base URL
+    input.auth-item.form-control(placeholder="The Roots" data-param="base_endpoint")
+    p.hint This is is the start of your URL. In the twitter api call "https://api.twitter.com/1.1/search" -  
+      strong https://api.twitter.com 
+      | would be the base URL
+    .spacer
+    .required-auth-info
+    button.inline.primary-button.autodetect-auth-ok OK
+    button.inline.primary-button.autodetect-auth-cancel Cancel

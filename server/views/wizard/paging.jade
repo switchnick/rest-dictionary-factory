@@ -3,14 +3,17 @@ include ./navigation.jade
 include ../errorbanner.jade
 .container.wizard.general
   h1 #{info.display_name}
-  h2 How do you page?
+  h2 Page me a picture
   .row
-    .col-md-12
-      label Paging Method
-      select.form-control
-        for page in defaults.paging_methods
-          option(selected=dictionary.paging_method==page.name) #{page.name}
-      p.hint Explanation goes here
+    for page in defaults.paging_methods
+      .col-md-3
+        div(class='card' class='paging-method' class=dictionary.paging_method==page.name?'active':'' data-provider='github' data-prop='paging_method' data-item='#{page.name}')
+          .paging-type
+            h3 #{page.name}
+          .paging-desc
+            p.hint #{page.description}
+  .row
+    .col-md-12      
       case dictionary.paging_method
         when "Pages"
           include ./paging/pages.jade
@@ -19,5 +22,5 @@ include ../errorbanner.jade
         when "Supplied Url"
           include ./paging/url.jade
         default
-          include ./paging/boilerplate.jade    
+          include ./paging/none.jade    
 include ../footer.jade

@@ -12,7 +12,6 @@
     }
     &.active{
       color: @primary;
-      box-shadow: 0px 0px 5px @primary;
       a{
         color: @primary;
       }
@@ -32,7 +31,29 @@
 }
 
 .wizard{
+  .auth-method, .paging-method{
+    height: 150px;
+    cursor: pointer;
+    .auth-type, .paging-type{
+      text-align: center;
+    }
+    .auth-desc, .paging-desc{
+      font-size: 12px;
+    }
+  }
   .save-successful{
     color: @green;
   }
+  .table-card{
+    h3{
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.autodetect-auth{
+  width: 500px;
+  margin: 80px auto;
+  padding-bottom: 20px;
 }

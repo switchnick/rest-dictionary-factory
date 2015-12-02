@@ -31,3 +31,34 @@ $('.wizard').on('click', '.save', function(event){
     }
   });
 });
+
+$('.wizard').on('click', '.auth-method, .paging-method', function(event){
+  var provider = $(this).attr("data-provider");
+  var prop = $(this).attr("data-prop");
+  var data = $(this).attr("data-item");
+  updateSessionDictionary(provider, prop, data);
+  window.location = window.location;
+});
+
+$('.wizard').on('click', '.table-card', function(event){
+  var index = $(this).attr("data-index");
+  window.location = window.location.pathname+"?table="+index;
+});
+
+$('.wizard').on('click', '.auto-detect', function(event){
+  autoDetectFields();
+});
+
+$('.autodetect-auth-container').on('click', '.autodetect-auth-ok', function(event){
+  var authInfo = {};
+  $('.autodetect-auth-container .autodetect-auth .auth-item').each(function(index, item){
+    authInfo[$(item).attr('data-param')] = $(item).val();
+  });
+  window.autoDetectAuthCallback.call(null, authInfo);
+});
+
+$('.autodetect-auth-container').on('click', '.autodetect-auth-cancel', function(event){
+  $('.autodetect-auth-container').hide();
+  $('.autodetect-auth .required-auth-info').html('');
+  window.autoDetectAuthCallback = null;
+});
