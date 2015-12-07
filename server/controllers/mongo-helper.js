@@ -16,6 +16,7 @@ module.exports = {
           }
           else{
             req.session.info = response;
+            req.session.temp = {};
             next();
           }
         });

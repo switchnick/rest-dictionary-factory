@@ -20,25 +20,6 @@ module.exports = {
       description: "Requires a Client ID and Client Secret to generate an access token for authentication."
     }
   },
-  auth_test_defaults:{
-    none: null,
-    basic: {
-      params: [
-        {
-          name: "Username",
-          param: "username",
-          description: "Please enter your username.",
-          type: "text"
-        },
-        {
-          name: "Password",
-          param: "password",
-          description: "Please enter your password.",
-          type: "password"
-        }
-      ]
-    }
-  },
   paging_methods: {
     none:{
       name: "None",
@@ -55,6 +36,20 @@ module.exports = {
     url:{
       name: "Supplied URL",
       description: "A URL is provided in the downloaded data that can be used for downloading the next page."
+    }
+  },
+  sense_data_types:{
+    string: {
+      name: "String"
+    },
+    boolean: {
+      name: "Boolean"
+    },
+    integer: {
+      name: "Integer"
+    },
+    real: {
+      name: "Real"
     }
   }
 }

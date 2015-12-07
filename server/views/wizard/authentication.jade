@@ -24,5 +24,10 @@ include ../errorbanner.jade
         when "OAuth"
           include ./auth/oauth.jade
         default
-          include ./auth/none.jade                  
+          include ./auth/none.jade
+    .col-md-12
+      .spacer
+      button.save.primary-button Save
+      p.save-successful(style='display:none;') Changes successfully save and committed
+      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.                      
 include ../footer.jade

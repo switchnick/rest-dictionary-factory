@@ -3,6 +3,7 @@ var Dictionary = require('../models/dictionaries'),
 
 module.exports = {
   get: function(query, callbackFn){
+    console.log('controller get');
     Dictionary.find(query, function(err, result){
       if(err){
         console.log(err);

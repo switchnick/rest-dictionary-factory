@@ -5,6 +5,12 @@ $('.wizard').on('focusout', '.form-control[type!="radio"][type!="checkbox"]', fu
   var data = $(this).val();
   updateSessionDictionary(provider, prop, data);
 });
+$('.autodetect-auth').on('focusout', '.form-control[type!="radio"][type!="checkbox"]', function(event){
+  var provider = $(this).attr("data-provider");
+  var prop = $(this).attr("data-prop");
+  var data = $(this).val();
+  updateSessionDictionary(provider, prop, data);
+});
 
 //listen to change on radio buttons
 $('.wizard').on('change', '.form-control[type="radio"],.form-control[type="checkbox"], .form-control.drop-down', function(event){
@@ -45,20 +51,7 @@ $('.wizard').on('click', '.table-card', function(event){
   window.location = window.location.pathname+"?table="+index;
 });
 
-$('.wizard').on('click', '.auto-detect', function(event){
-  autoDetectFields();
-});
-
-$('.autodetect-auth-container').on('click', '.autodetect-auth-ok', function(event){
-  var authInfo = {};
-  $('.autodetect-auth-container .autodetect-auth .auth-item').each(function(index, item){
-    authInfo[$(item).attr('data-param')] = $(item).val();
-  });
-  window.autoDetectAuthCallback.call(null, authInfo);
-});
-
 $('.autodetect-auth-container').on('click', '.autodetect-auth-cancel', function(event){
-  $('.autodetect-auth-container').hide();
-  $('.autodetect-auth .required-auth-info').html('');
-  window.autoDetectAuthCallback = null;
+  $('.autodetect-auth-container').removeClass('show');
+  $('.autodetect-auth-container').addClass('hide');
 });

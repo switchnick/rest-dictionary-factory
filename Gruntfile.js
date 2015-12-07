@@ -15,7 +15,7 @@ module.exports = function(grunt) {
           optimization: 2
         },
         files: {
-          "public/styles/css/main.css": "public/styles/less/main.less" // destination file and source file
+          "public/styles/css/dictionary-factory.css": "public/styles/less/main.less" // destination file and source file
         }
       }
     },

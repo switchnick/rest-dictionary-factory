@@ -22,30 +22,37 @@ router.post('/updatesessiondictionary/:id', Auth.isLoggedIn, MongoHelper.getInfo
     console.log(provider);
     if(provider=="mongo"){
       req.session.info[prop] = data;  //should only ever go 1 level deep on the mongo data
+      console.log(req.session.info);
     }
-    var props = prop.split(".");
-    var dicProp = req.session.dictionary;
-    for (var i=0;i<props.length;i++){
-      if(i==props.length-1){
-        //we assign the value to the current prop
-        dicProp[props[i]] = data;
-      }
-      else{
-        //we go to the next object and create it if necessary
-        if(!dicProp[props[i]]){
-          if(dicProp.length){
-            //then it's an array
-            dicProp.push({});
-          }
-          else{
-            //it's an object
-            dicProp[props[i]] = {};
-          }
+    if(provider=="temp"){
+      req.session.temp[prop] = data;  //should only ever go 1 level deep on the temp data
+      console.log(req.session.temp);
+    }
+    if(provider="github"){
+      var props = prop.split(".");
+      var dicProp = req.session.dictionary;
+      for (var i=0;i<props.length;i++){
+        if(i==props.length-1){
+          //we assign the value to the current prop
+          dicProp[props[i]] = data;
         }
-        dicProp = dicProp[props[i]];
+        else{
+          //we go to the next object and create it if necessary
+          if(!dicProp[props[i]]){
+            if(dicProp.length){
+              //then it's an array
+              dicProp.push({});
+            }
+            else{
+              //it's an object
+              dicProp[props[i]] = {};
+            }
+          }
+          dicProp = dicProp[props[i]];
+        }
       }
+      console.log(req.session.dictionary);
     }
-    console.log(req.session.dictionary);
     res.json({});
   }
   catch(err){
@@ -62,30 +69,35 @@ router.post('/newtable/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.set
 });
 
 router.get('/autodetectcheck/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  var auth_test_defaults = Defaults.auth_test_defaults[req.session.dictionary.auth_method.toLowerCase().replace(/\s/g, "-")];
-  console.log(auth_test_defaults);
-  console.log(req.session.dictionary.auth_method.toLowerCase().replace(/\s/g, "-"));
-  console.log(Defaults.auth_test_defaults);
-  res.json({auth_method: req.session.dictionary.auth_method, auth_options: req.session.dictionary.auth_options, auth_test_defaults: auth_test_defaults});
+  //checking goes here
+
+  //then
+  res.redirect('/schema/'+req.params.id+'?table='+req.session.temp.table+'&autodetect=true');
+  //res.json({auth_method: req.session.dictionary.auth_method, auth_options: req.session.dictionary.auth_options, auth_test_defaults: auth_test_defaults});
 });
 
 router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  var requestUrl = req.body.base_endpoint;
+  var requestUrl = req.body.test_url;
+  if(req.session.dictionary.base_endpoint && req.session.dictionary.base_endpoint!=''){
+    requestUrl += "/";
+    requestUrl += req.session.dictionary.base_endpoint;
+  }
   requestUrl += "/";
-  requestUrl += req.session.dictionary.base_endpoint;
-  requestUrl += "/";
-  requestUrl += req.session.dictionary.tables[req.body.table].endpoint;
+  requestUrl += req.session.dictionary.tables[req.session.temp.table].endpoint;
 
   var headers = {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "User-Agent": "rest-dictionary-factory"
   };
   switch (req.session.dictionary.auth_method) {
     case "none":
 
       break;
-    case "basic":
-      headers.authorization = "Basic "+req.body.username+":"+req.body.password;
+    case "Basic":
+      headers.Authorization = "Basic "+req.body.username+":"+req.body.password;
       break;
+    case "OAuth":
+      headers.Authorization = "Bearer "+ req.body.access_token;
     default:
 
   }
@@ -96,23 +108,57 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
       res.json({err: error});
     }
     else{
-      var data = JSON.parse(body)[req.session.dictionary.data_element];
-      var fields = [];
-      if(data && data.length>0){
-        for (var key in data[0]){
-          var field = {};
-          field.qName = key;
-          field.path = key;
-          field.type = "String";
-          fields.push(field);
+      console.log(body);
+      try{
+        if(req.session.dictionary.data_element && req.session.dictionary.data_element != ''){
+          var data = JSON.parse(body)[req.session.dictionary.data_element];
         }
+        else{
+          var data = JSON.parse(body);
+        }
+        console.log(data);
+        var fields = [];
+        if(data && data.length>0){
+          for (var key in data[0]){
+            if(key!="__v"){
+              var field = {};
+              field.qName = key;
+              field.path = key;
+              field.type = "String";
+              fields.push(field);
+            }
+          }
+        }
+        req.session.dictionary.tables[req.session.temp.table].fields = fields;
+        res.redirect('/schema/'+req.params.id+'?table='+req.session.temp.table);
       }
-      req.session.dictionary.tables[req.body.table].fields = fields;
-      res.json(body);
+      catch(err){
+        console.log(err);
+        req.flash('error', 'Could not automatically detect the fields for <strong>'+req.session.dictionary.tables[req.session.temp.table].qName+'</strong>. Please check the details and try again.');
+        res.redirect('/schema/'+req.params.id+'?table='+req.session.temp.table);
+      }
     }
   });
 
 
+});
+
+router.get('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  res.redirect("https://github.com/login/oauth/authorize?client_id="+req.session.temp.client_id+"&redirect_uri=http://localhost:4000/auth/oauth");
+});
+
+router.get('/public', function(req, res){
+  console.log('getting public');
+  Dictionary.get({}, function(err, result){
+    if(err){
+      console.log(err);
+      res.send({err:err});
+    }
+    else{
+      console.log(result);
+      res.send({configs:result});
+    }
+  });
 });
 
 router.get('/save/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){

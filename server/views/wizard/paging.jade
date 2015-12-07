@@ -22,5 +22,10 @@ include ../errorbanner.jade
         when "Supplied Url"
           include ./paging/url.jade
         default
-          include ./paging/none.jade    
+          include ./paging/none.jade
+    .col-md-12
+      .spacer
+      button.save.primary-button Save
+      p.save-successful(style='display:none;') Changes successfully save and committed
+      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.      
 include ../footer.jade

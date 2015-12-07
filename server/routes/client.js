@@ -48,10 +48,12 @@ router.get('/paging/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSes
   res.render('wizard/paging.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'paging', defaults: Defaults});
 });
 router.get('/schema/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  console.log(req.query);
-  res.render('wizard/schema.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'schema', defaults: Defaults, tableIndex: req.query.table});
+  var tableIndex = req.query.table || 0;
+  req.session.temp.table = tableIndex;
+  console.log('table index is '+tableIndex);
+  var autodetect = (req.query.autodetect && req.query.autodetect == "true");
+  res.render('wizard/schema.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'schema', defaults: Defaults, temp: req.session.temp, tableIndex: tableIndex, autodetect: autodetect});
 });
-
 
 //api routes
 router.post('/create', Auth.isLoggedIn, function(req, res, next){
