@@ -1,0 +1,7 @@
+h2 Paging with Pages
+label URL Parameter
+input.form-control(placeholder="Page me" value="#{dictionary.paging_options.page_url_parameter || ''}" data-provider="github" data-prop="paging_options.page_url_parameter")
+p.hint This should be the name of the URL parameter required to specify the page to download.
+label Total Pages
+input.form-control(placeholder="For how long?" value="#{dictionary.paging_options.total_pages || ''}" data-provider="github" data-prop="paging_options.total_pages")
+p.hint The downloaded page should contain a property stating how many pages there are in total.

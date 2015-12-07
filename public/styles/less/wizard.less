@@ -1,5 +1,85 @@
 .dictionary-nav{
-  li{
+  .nav-button{
+    height: 60px;
     display: inline-block;
+    line-height: 50px;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+    color: @accent;
+    a{
+      color: @accent;
+    }
+    &.active{
+      color: @primary;
+      a{
+        color: @primary;
+      }
+    }
+    &:hover{
+      box-shadow: 0px 0px 5px @accent;
+    }
   }
+}
+
+.general{
+  .icon{
+    img{
+      max-height: 100px;
+    }
+  }
+}
+
+.wizard{
+  .auth-method, .paging-method{
+    height: 150px;
+    cursor: pointer;
+    .auth-type, .paging-type{
+      text-align: center;
+    }
+    .auth-desc, .paging-desc{
+      font-size: 12px;
+    }
+  }
+  .save-successful{
+    color: @green;
+  }
+  .table-card, .field-card{
+    position: relative;
+    h3{
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
+    .delete-button{
+      position: absolute;
+      top: ~"calc(50% - 15px)";
+      height: 20px;
+      right: 35px;
+    }
+    margin-bottom: 5px;
+  }
+  .field-card{
+    position: relative;
+    input{
+      border: none;
+      width: 50%;
+    }
+    select{
+      position: absolute;
+      right: 50px;
+      top: ~"calc(50% - 15px)";
+      height: 30px;
+      border: none;
+      box-shadow: none;
+      width: 100px;
+      color: @fog;
+      font-size: 14px;
+    }
+  }
+}
+
+.autodetect-auth{
+  width: 500px;
+  margin: 80px auto;
+  padding-bottom: 20px;
 }

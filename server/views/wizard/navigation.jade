@@ -1,8 +1,14 @@
-ul.dictionary-nav
-  li 
-    a(href="/general") General
-  li 
-    a(href="/authentication") Authentication
-  li 
-    a(href="/schema") Schema
-  
+div.container
+  .row.dictionary-nav
+    .col-md-2
+      div(class='nav-button' class='card' class=page=='general'?'active':'')
+        a(href="/general/#{info._id}") General  
+    .col-md-2
+      div(class='nav-button' class='card' class=page=='auth'?'active':'')
+        a(href="/authentication/#{info._id}") Authentication
+    .col-md-2
+      div(class='nav-button' class='card' class=page=='paging'?'active':'')
+        a(href="/paging/#{info._id}") Paging
+    .col-md-2
+      div(class='nav-button' class='card' class=page=='schema'?'active':'')
+        a(href="/schema/#{info._id}?table=0") Schema

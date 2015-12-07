@@ -1,5 +1,32 @@
 include ../header.jade
-div.container.page
-  h1 Tell us about your RESTful source
-  
+include ./navigation.jade
+include ../errorbanner.jade
+.container.wizard.general
+  h1 #{info.display_name}
+  h2 How do you do?
+  .row
+    .col-md-8
+      label Display name
+      input.form-control(value="#{info.display_name}" data-provider="mongo" data-prop="display_name")
+      p.hint This will make the name look better
+      label Endpoint
+      input.form-control(placeholder="We'll REST here a while" value="#{dictionary.base_endpoint  || ''}" data-provider="github" data-prop="base_endpoint") 
+      p.hint For example, in the twitter api call "https://api.twitter.com/1.1/search" -  
+        strong 1.1 
+        | would be the endpoint
+      label Data Object
+      input.form-control(placeholder="Where's the data at?" value="#{dictionary.data_element  || ''}" data-provider="github" data-prop="data_element")
+      p.hint In a lot of cases this is normally 
+        strong data      
+      br
+      .spacer
+      button.save.primary-button Save
+      p.save-successful(style='display:none;') Changes successfully save and committed
+      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.
+    .col-md-4
+      label Icon
+      .icon
+        img(src="#{info.icon}")   
+      br
+      button.secondary-button Change 
 include ../footer.jade

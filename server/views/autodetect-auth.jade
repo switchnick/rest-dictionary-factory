@@ -1,0 +1,25 @@
+.autodetect-auth-container.smokescreen(class=autodetect&&autodetect==true?'show':'hide')
+  | #{autodetect}
+  .autodetect-auth.card
+    form(action="/api/autodetectfields/#{info._id}" method="post")
+      h3 Auto Detect
+      p.hint In order to successfully auto detect the fields inside the selected table please provide the following information.
+      label Base URL
+      input.auth-item.form-control(placeholder="The Roots" data-param="base_endpoint" value="#{info.test_url || ''}" name="test_url")
+      input.form-control(type="checkbox" checked=info.test_url data-provider="mongo" data-prop="test_url")
+      span.check-label Remember this
+      p.hint In the twitter api call "https://api.twitter.com/1.1/search" -  
+        strong https://api.twitter.com 
+        | would be the base URL
+      .spacer
+      .required-auth-info
+        case dictionary.auth_method        
+          when "Basic"
+            include ./autodetect/basic.jade
+          when "API Key"
+            include ./autodetect/api-key.jade
+          when "OAuth"
+            include ./autodetect/oauth.jade          
+      .center
+        button.inline.primary-button.autodetect-auth-ok(type="submit") OK
+        button.inline.primary-button.autodetect-auth-cancel Cancel

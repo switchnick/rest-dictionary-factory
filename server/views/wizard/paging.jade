@@ -1,0 +1,31 @@
+include ../header.jade
+include ./navigation.jade
+include ../errorbanner.jade
+.container.wizard.general
+  h1 #{info.display_name}
+  h2 Page me a picture
+  .row
+    for page in defaults.paging_methods
+      .col-md-3
+        div(class='card' class='paging-method' class=dictionary.paging_method==page.name?'active':'' data-provider='github' data-prop='paging_method' data-item='#{page.name}')
+          .paging-type
+            h3 #{page.name}
+          .paging-desc
+            p.hint #{page.description}
+  .row
+    .col-md-12      
+      case dictionary.paging_method
+        when "Pages"
+          include ./paging/pages.jade
+        when "Offset/Limit"
+          include ./paging/offset_limit.jade
+        when "Supplied Url"
+          include ./paging/url.jade
+        default
+          include ./paging/none.jade
+    .col-md-12
+      .spacer
+      button.save.primary-button Save
+      p.save-successful(style='display:none;') Changes successfully save and committed
+      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.      
+include ../footer.jade
