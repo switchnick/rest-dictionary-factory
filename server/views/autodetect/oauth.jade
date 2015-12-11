@@ -4,7 +4,7 @@ p.hint Please enter your client id.
 label Client Secret
 input.form-control.auth-item(type='password' data-provider="temp" data-prop="client_secret" name='client_secret' value="#{temp.client_secret || ''}")
 p.hint Please enter your client secret.
-a.secondary-button(href="/api/testoauth/#{info._id}" target="_window")
+a.secondary-button(href="/api/testoauth/#{info._id}" target="_blank") Authorize
 label Access Token
 input.form-control.auth-item(type='text' data-provider="temp" data-prop="client_secret" name='access_token' value="#{temp.access_token || ''}")
-p.hint Please enter your client secret.
+p.hint Please enter the Access Token you should have recieved after Authorizing the application.

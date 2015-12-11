@@ -1,5 +1,6 @@
-div.container
-  .error-banner
-    if error && error!=''
+div.container  
+  if error && error!=''
+    .error-banner.card
       h3 Ugh!
       p.description #{error}
+      !{errorDetail}

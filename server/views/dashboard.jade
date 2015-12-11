@@ -13,5 +13,6 @@ div.container.page
               img(src="#{dic.icon}")    
             .actions
               a.download-button Download
-              a.delete-button(href="")
+              form(action="/delete/#{dic._id}" method="post")
+                button.delete-button(href="")
 include ./footer.jade

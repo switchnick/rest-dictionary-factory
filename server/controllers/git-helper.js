@@ -1,6 +1,7 @@
 //this file just helps to clean up the code structure of the client.js route file
 var git = require('github'),
-    atob = require('atob');
+    atob = require('atob'),
+    config = require('../../config');
 
 GitHub = new git({
   version: "3.0.0",
@@ -67,6 +68,22 @@ module.exports = {
       else{
         console.log('content got');
         callbackFn.call(null, content);
+      }
+    });
+  },
+  getContentPublic: function(query, callbackFn){
+    GitHub.authenticate({type: "token", token: config.github.token});
+    console.log(query);
+    GitHub.repos.getContent(query, function(err, content){
+      if(err){
+        console.log('error getting content');
+        console.log(err);
+        req.flash('error', err.message);
+        res.redirect('/error');
+      }
+      else{
+        console.log('content got');
+        callbackFn.call(null, JSON.parse(atob(content.content)));
       }
     });
   },

@@ -27,7 +27,10 @@ include ../autodetect-auth.jade
         h3 Advanced      
         | Coming Soon
       .col-md-5
-        h3 Fields
+        if dictionary.tables[tableIndex].fields
+          h3 Fields #{'('+dictionary.tables[tableIndex].fields.length+')' || ''}
+        else
+          h3 Fields
         a(href="/api/autodetectcheck/#{info._id}").inline.primary-button.auto-detect Auto Detect
         button.inline.secondary-button Add Field
         .spacer
