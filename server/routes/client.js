@@ -39,20 +39,20 @@ router.get('/new', Auth.isLoggedIn, function(req, res, next){
   res.render('wizard/create.jade', {user: req.user});
 });
 router.get('/general/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', defaults: Defaults});
+  res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 router.get('/authentication/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults});
+  res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 router.get('/paging/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  res.render('wizard/paging.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'paging', defaults: Defaults});
+  res.render('wizard/paging.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'paging', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 router.get('/schema/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   var tableIndex = req.query.table || 0;
   req.session.temp.table = tableIndex;
   console.log('table index is '+tableIndex);
   var autodetect = (req.query.autodetect && req.query.autodetect == "true");
-  res.render('wizard/schema.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'schema', defaults: Defaults, temp: req.session.temp, tableIndex: tableIndex, autodetect: autodetect});
+  res.render('wizard/schema.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'schema', defaults: Defaults, temp: req.session.temp, tableIndex: tableIndex, autodetect: autodetect, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 
 //api routes
@@ -131,13 +131,13 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
   });
 });
 
-router.post('/delete', Auth.isLoggedIn, function(req, res){
-  Dictionary.delete({owner:req.user.username, name: req.body.repo}, function(err){
+router.post('/delete/:id', Auth.isLoggedIn, function(req, res){
+  Dictionary.delete({owner:req.user.username, _id: req.params.id}, function(err){
     if(err){
       console.log(err);
       req.json({err: err});
     }
-    res.json({});
+    res.redirect('/dashboard');
   });
 });
 

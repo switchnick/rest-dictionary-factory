@@ -21,7 +21,8 @@ router.use('/oauth', function(req, res){
     data.client_secret = "4b72aa7380fc137feb2930475a6e73dae1989d35";
     console.log('the dictionary is');
     console.log(req.session.dictionary);
-    request({url: "https://github.com/login/oauth/access_token", formData: data}, function(err, response, body){
+    request({url:req.session.dictionary.auth_options.oauth_token_url, formData: data}, function(err, response, body){
+    //request({url: "https://github.com/login/oauth/access_token", formData: data}, function(err, response, body){
       console.log('we\'re in the callback of the request');
       if(err){
         console.log(err);

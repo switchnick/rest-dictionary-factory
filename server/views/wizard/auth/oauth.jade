@@ -1,1 +1,10 @@
-
+label Authorize Url
+input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_authorize_url || ''}" data-provider="github" data-prop="auth_options.oauth_authorize_url")
+p.hint The Url to redirect users to so that they can Authorize the application.
+label Token Url
+input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_token_url || ''}" data-provider="github" data-prop="auth_options.oauth_token_url")
+p.hint The Url that can be used to exchange a given code for an Access Token. More information on OAuth 2.0 can be found 
+  a(href="") here
+br
+button.secondary-button.store_oauth_creds Store OAuth Credentials
+p.hint To simplify the authentication process for end users you can store your Client Id and Client Secret against the dictionary. These details will not be available publicly.

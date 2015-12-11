@@ -51,5 +51,25 @@ module.exports = {
     real: {
       name: "Real"
     }
+  },
+  autodetect_requirements:{
+    none: [],
+    basic: [],
+    api_key: [
+      {
+        path: "auth_options.api_key_parameter",
+        label: "API Key Url Parameter"
+      }
+    ],
+    oauth: [
+      {
+        path: "auth_options.oauth_authorize_url",
+        label: "OAuth Authorize Url"
+      },
+      {
+        path: "auth_options.oauth_token_url",
+        label: "OAuth Token Url"
+      }
+    ]
   }
 }
