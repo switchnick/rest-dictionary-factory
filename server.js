@@ -12,8 +12,7 @@ var express = require('express'),
     Dictionary = require( __dirname+'/server/controllers/dictionaries'),
     Defaults = require('./defaults');
 
-//mongoose.connect('mongodb://localhost:27017/dictionary-factory');
-mongoose.connect('mongodb://principal:principal%@ds041404.mongolab.com:41404/heroku_s6fg7p6h');
+mongoose.connect(config.mongo);
 
 require('./server/controllers/passport/passport.js')(passport, config);
 
