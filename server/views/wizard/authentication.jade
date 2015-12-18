@@ -12,6 +12,20 @@ include ../errorbanner.jade
             h3 #{auth.name}
           .auth-desc
             p.hint #{auth.description}
+  if dictionary.auth_method=='OAuth'  
+    .row
+      .col-md-12
+        .auth-version
+          label OAuth Version
+          br
+          span.inline 1.0
+          input.inline.form-control(type='radio' name='authversion' data-provider='github' data-prop='auth_options.auth_version' value='1.0'
+            checked=dictionary.auth_options.auth_version&&dictionary.auth_options.auth_version=='1.0'?'checked':'checked'
+          )
+          span.inline 2.0
+          input.inline.form-control(type='radio' name='authversion' data-provider='github' data-prop='auth_options.auth_version' value='2.0'
+            checked=dictionary.auth_options.auth_version&&dictionary.auth_options.auth_version=='2.0'?'checked':null
+          )
   .row
     .col-md-12
       case dictionary.auth_method

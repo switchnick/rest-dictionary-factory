@@ -14,10 +14,11 @@ $('.autodetect-auth').on('focusout', '.form-control[type!="radio"][type!="checkb
 
 //listen to change on radio buttons
 $('.wizard').on('change', '.form-control[type="radio"],.form-control[type="checkbox"], .form-control.drop-down', function(event){
-  updateSessionConfig();
-  if(event.target.attributes['data-name'].value=='paging_method'){
-    window.location = '/config/'+getId()+'/schema';
-  }
+  var provider = $(this).attr("data-provider");
+  var prop = $(this).attr("data-prop");
+  var data = $(this).val();
+  updateSessionDictionary(provider, prop, data);
+  window.location = window.location;
 });
 
 //listen to the save button
