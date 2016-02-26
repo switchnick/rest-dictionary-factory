@@ -17,6 +17,34 @@ GitHub = new git({
 
 module.exports = {
   setSessionDictionary: function(req, res, next){
+    var owner;
+    if(req.user && req.user.username){
+      owner = req.user.username;
+    }
+    else if (req.session.info) {
+      owner = req.session.info.owner;
+    }
+    if(!req.session.dictionary || req.session.curr_dictionary != req.params.id){
+      GitHub.repos.getContent({user: owner, repo: req.session.info.name, path: req.session.info.dictionary}, function(err, content){
+        if(err){
+          console.log('error getting content');
+          console.log(err);
+          req.flash('error', err.message);
+          res.redirect('/error');
+        }
+        else{
+          req.session.dictionary = JSON.parse(atob(content.content));
+          req.session.curr_dictionary = req.params.id;
+          req.session.sha = content.sha;
+          next();
+        }
+      });
+    }
+    else{
+      next();
+    }
+  },
+  setSessionDictionaryAnon: function(req, res, next){
     console.log('g3');
     if(!req.session.dictionary || req.session.curr_dictionary != req.params.id){
       GitHub.repos.getContent({user: req.user.username, repo: req.session.info.name, path: req.session.info.dictionary}, function(err, content){
@@ -67,7 +95,12 @@ module.exports = {
       }
       else{
         console.log('content got');
-        callbackFn.call(null, content);
+        console.log(content);
+        var result;
+        if(content.sha){
+          result = content;
+        }
+        callbackFn.call(null, result);
       }
     });
   },
@@ -78,8 +111,6 @@ module.exports = {
       if(err){
         console.log('error getting content');
         console.log(err);
-        req.flash('error', err.message);
-        res.redirect('/error');
       }
       else{
         console.log('content got');
@@ -121,12 +152,14 @@ module.exports = {
   },
   updateContent: function(req, res, data, callbackFn){
     GitHub.authenticate({type: "oauth", token: req.session.token});
-    GitHub.repos.updateFile(data, function(err){
+    GitHub.repos.updateFile(data, function(err, data){
+      console.log(data);
       if(err){
-        callbackFn.call(null, err);
+        callbackFn.call(null, {err:err});
       }
       else {
-        callbackFn.call(null);
+        //req.session.sha = data.content.sha;
+        callbackFn.call(null, data.content.sha);
       }
     });
   }

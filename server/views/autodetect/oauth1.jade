@@ -1,0 +1,12 @@
+label Consumer Key
+input.form-control.auth-item(type='text' data-provider="temp" data-prop="consumer_key" name='consumer_key' value="#{temp.consumer_key || ''}")
+p.hint Please enter your consumer key.
+label Consumer Secret
+input.form-control.auth-item(type='password' data-provider="temp" data-prop="consumer_secret" name='consumer_secret' value="#{temp.consumer_secret || ''}")
+p.hint Please enter your client secret.
+a.secondary-button(href="/api/testoauth/#{info._id}" target="_blank") Authorize
+label Access Token
+input.form-control.auth-item(type='text' data-provider="temp" data-prop="access_token" name='access_token' value="#{temp.access_token || ''}")
+label Token Secret
+input.form-control.auth-item(type='text' data-provider="temp" data-prop="token_secret" name='token_secret' value="#{temp.token_secret || ''}")
+p.hint Please enter the Access Token and Token Secret you should have recieved after Authorizing the application.

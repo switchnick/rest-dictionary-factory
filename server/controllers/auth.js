@@ -1,3 +1,6 @@
+var Test = require('./test'),
+    config = require('../../config');
+
 module.exports = {
   isLoggedIn: function(req, res, next){
     console.log('a1');

@@ -1,0 +1,10 @@
+include ./header.jade
+div.container.page  
+  .card.token-card
+    h1 Authorize
+    form(method="post" action="/api/oauth2_authorize")
+      label Please enter the client secret for #{clientId}
+      input.form-control.auth-item(type='text' name='client_secret' value="")      
+      p.hint Please enter your client secret.
+      button.secondary-button(type="submit" target="_blank") Authorize    
+include ./footer.jade

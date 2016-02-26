@@ -26,7 +26,10 @@ include ../errorbanner.jade
     .col-md-4
       label Icon
       .icon
-        img(src="#{info.icon}")   
+        img(src="#{icon}")   
       br
-      button.secondary-button Change 
+      //form(id="iconForm" name="uploader", action="/api/iconupload/#{info._id}", method="post", enctype="multipart/form-data")
+      span.btn.btn-default.btn-file Choose
+        input(type="file", name="file", id="file" data-id="#{info._id}")     
+      //button.secondary-button.change-icon Change 
 include ../footer.jade

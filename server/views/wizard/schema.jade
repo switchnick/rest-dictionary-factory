@@ -12,7 +12,7 @@ include ../autodetect-auth.jade
         button.secondary-button(type="submit") Add Table 
         .spacer
         each table, index in dictionary.tables
-          div(class="table-card" class="card" class=tableIndex==index?'active':'' data-index='#{index}')
+          div(class="table-card" class="card" class=tableIndex==index?'active':'' data-item="table" data-id="#{info._id}" data-index='#{index}')
             h3 #{table.qName}
             span.sub-title /#{table.endpoint || ''}   
             .delete-button
@@ -42,7 +42,7 @@ include ../autodetect-auth.jade
               .sub-title              
                 input(value="#{field.path}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.path")              
               .field-type
-                select.form-control(value="#{field.path}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.path")              
+                select.form-control(value="#{field.type}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.type")              
                   each val in defaults.sense_data_types
                     option(selected=field.type==val.name) #{val.name}
               .delete-button

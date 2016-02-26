@@ -1,236 +1,237 @@
 @import "colours.less";
 @import "fonts.less";
 
-body, .body{
-  font-family: sans-serif, helvetica, arial;
-  font-weight: lighter;
+.body{  
   color: @default-text;
   background-color: @dust;
-}
 
-label{
-  font-weight: normal;
-  margin: 3px 0px;
-}
 
-.page{
-  margin-top: 60px;
-}
+  label{
+    font-weight: normal;
+    margin: 3px 0px;
+  }
 
-.content{
-  padding: 10px 0px;
-}
+  .page{
+    margin-top: 80px;
+  }
 
-.primary-button, .secondary-button{
-  display: block;
-  width: 200px;
-  padding: 5px;
-  height: 35px;
-  line-height: 26px;
-  text-align: center;
-  border-radius: 3px;
-  font-weight: normal;
-  border: none;
-}
+  .content{
+    padding: 10px 0px;
+  }
 
-.primary-button{
-  background-color: @primary;
-  color: white;
-  box-shadow: 0px 0px 2px @accent;
-  margin-bottom: 3px;
-}
+  .primary-button, .secondary-button{
+    display: block;
+    width: 200px;
+    padding: 5px;
+    height: 35px;
+    line-height: 26px;
+    text-align: center;
+    border-radius: 3px;
+    font-weight: normal;
+    border: none;
+  }
 
-.secondary-button{
-  background-color: @accent;
-  color: @primary;
-  box-shadow: 0px 0px 2px @primary;
-  margin-bottom: 3px;
-}
+  .primary-button{
+    background-color: @primary;
+    color: white;
+    box-shadow: 0px 0px 2px @accent;
+    margin-bottom: 3px;
+  }
 
-.download-button, .delete-button{
-  display: block;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
-  color: @fog;
-  &:after{
+  .secondary-button{
+    background-color: @accent;
+    color: @primary;
+    box-shadow: 0px 0px 2px @primary;
+    margin-bottom: 3px;
+  }
+
+  .download-button, .delete-button{
+    display: block;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    color: @fog;
+    &:after{
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: factory;
+      font-size: 30px;
+    }
+  }
+
+  .download-button{
+    &:after{
+      content: "\E801";
+    }
+    &:hover{
+      color: @green;
+    }
+  }
+
+  .delete-button{
+    &:after{
+      content: "\E800";
+    }
+    &:hover{
+      color: @red;
+    }
+  }
+
+  .title{
+    font-size: 20px;
+    font-weight: normal;
+  }
+
+  .sub-title{
+    font-size: 14px;
+    font-weight: normal;
+    color: @fog;
+  }
+
+  .check-label{
+    height: 30px;
+    line-height: 30px;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+  }
+
+  input[type=checkbox]{
+    display: inline-block;
+    width: 30px;
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  h1,h2,h3,h4{
+    margin-top: 12px;
+    margin-bottom: 5px;
+  }
+
+  h1{
+    font-size: 24px;
+    color: @primary;
+  }
+  h2{
+    font-size: 20px;
+    color: @default-text;
+  }
+  h3{
+    font-size: 18px;
+    color: @primary;
+  }
+
+  ul{
+    list-style-type: none;
+  }
+
+  .description{
+    padding: 10px 0px;
+  }
+
+  .card{
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #ccc;
+    &.active{
+      box-shadow: 0px 0px 5px @primary;
+    }
+  }
+
+  .dictionary{
+    height: 220px;
+    position: relative;
+    .icon{
+      text-align: center;
+      height: 150px;
+      width: 100%;
+      img{
+        margin-top: 20px;
+        max-height: 100px;
+      }
+    }
+    .title{
+      display: block;
+      height: 20px;
+      color: @default-text;
+    }
+    .delete-button{
+      position: absolute;
+      bottom: 10px;
+      right: 5px;
+    }
+    .download-button{
+      padding-left: 45px;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+    margin-bottom: 5px;
+  }
+
+  .hint{
+    color: @smog;
+    font-size: 12px;
+    margin: 2px 0px;
+    strong{
+      color: @primary;
+    }
+  }
+
+  .inline{
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .spacer{
+    border: 1px solid @fog;
+    margin: 5px 0;
+  }
+
+  .smokescreen{
+    z-index: 1000;
+    background-color: @smoke;
     position: absolute;
     top: 0;
     left: 0;
-    font-family: factory;
-    font-size: 30px;
-  }
-}
-
-.download-button{
-  &:after{
-    content: "\E801";
-  }
-  &:hover{
-    color: @green;
-  }
-}
-
-.delete-button{
-  &:after{
-    content: "\E800";
-  }
-  &:hover{
-    color: @red;
-  }
-}
-
-.title{
-  font-size: 20px;
-  font-weight: normal;
-}
-
-.sub-title{
-  font-size: 14px;
-  font-weight: normal;
-  color: @fog;
-}
-
-.check-label{
-  height: 30px;
-  line-height: 30px;
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  vertical-align: top;
-}
-
-input[type=checkbox]{
-  display: inline-block;
-  width: 30px;
-  margin: 0;
-  height: 30px;
-  line-height: 30px;
-}
-
-h1,h2,h3,h4{
-  margin-top: 12px;
-  margin-bottom: 5px;
-}
-
-h1{
-  font-size: 24px;
-  color: @primary;
-}
-h2{
-  font-size: 20px;
-  color: @default-text;
-}
-h3{
-  font-size: 18px;
-  color: @primary;
-}
-
-ul{
-  list-style-type: none;
-}
-
-.description{
-  padding: 10px 0px;
-}
-
-.card{
-  background-color: white;
-  padding: 5px 10px;
-  border-radius: 3px;
-  box-shadow: 0px 0px 5px #ccc;
-  &.active{
-    box-shadow: 0px 0px 5px @primary;
-  }
-}
-
-.dictionary{
-  height: 220px;
-  position: relative;
-  .icon{
-    text-align: center;
-    height: 150px;
+    height: 100%;
     width: 100%;
-    img{
-      margin-top: 20px;
-      max-height: 100px;
-    }
   }
-  .title{
+
+  .center{
+    text-align: center;
+  }
+
+  .show{
     display: block;
-    height: 20px;
   }
-  .delete-button{
-    position: absolute;
-    bottom: 10px;
-    right: 5px;
+  .hide{
+    display: none;
   }
-  .download-button{
-    padding-left: 45px;
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
+
+  .token-card{
+    margin: 0 auto;
+    margin-top: 50px;
+    width: auto;
+    max-width: 500px;
+    padding: 20px;
   }
-  margin-bottom: 5px;
-}
 
-.hint{
-  color: @smog;
-  font-size: 12px;
-  margin: 2px 0px;
-  strong{
-    color: @primary;
+  .inline{
+    display: inline-block;
   }
-}
-
-.inline{
-  display: inline-block;
-  margin-right: 5px;
-}
-
-.spacer{
-  border: 1px solid @fog;
-  margin: 5px 0;
-}
-
-.smokescreen{
-  z-index: 1000;
-  background-color: @smoke;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
-
-.center{
-  text-align: center;
-}
-
-.show{
-  display: block;
-}
-.hide{
-  display: none;
-}
-
-.token-card{
-  margin: 0 auto;
-  margin-top: 50px;
-  width: auto;
-  max-width: 500px;
-  padding: 20px;
-}
-
-.inline{
-  display: inline-block;
-}
 
 @import "header.less";
 @import "home.less";
 @import "login.less";
 @import "wizard.less";
 @import "errorbanner.less";
+
+}

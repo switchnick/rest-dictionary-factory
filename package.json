@@ -27,6 +27,7 @@
     "atob": "^1.1.2",
     "body-parser": "^1.14.1",
     "bootstrap": "^3.3.5",
+    "connect-busboy": "0.0.2",
     "connect-flash": "^0.1.1",
     "express": "^4.13.3",
     "express-session": "^1.12.1",

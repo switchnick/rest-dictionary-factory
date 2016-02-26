@@ -6,6 +6,7 @@ var schema = new Schema({
   display_name: String,
   owner: String,
   dictionary: String,
+  dictionary_url: String,
   icon: String,
   public: Boolean
 });
