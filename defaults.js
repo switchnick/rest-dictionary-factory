@@ -1,6 +1,6 @@
 module.exports = {
   icon: "/resources/dictionary.png",
-  description: "A JSON dictionary definition for use with the Qlik Sense Alternative REST Connector",
+  description: "A JSON dictionary definition for use with the Qlik Sense Generic REST Connector",
   readme: "",
   auth_methods: {
     none:{

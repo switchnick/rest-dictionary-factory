@@ -1,4 +1,5 @@
 .navbar{
+  min-height: 70px;
   background-color: @primary;
   color: @neutral;
   a{
@@ -9,7 +10,27 @@
     }
   }
   .navbar-brand{
-    font-weight: normal;
-    font-size: 16px;
+    font-weight: lighter;
+    font-size: 24px;
+    letter-spacing: 2px;
+    height: 70px;
+    line-height: 40px;
+    &:hover{
+      color: white;
+    }
+  }
+  .navbar-nav{
+    li{
+      a{
+        line-height: 40px;
+      }
+    }
+  }
+  .dropdown{
+    &.open{
+      a{
+        color: @primary;
+      }
+    }
   }
 }

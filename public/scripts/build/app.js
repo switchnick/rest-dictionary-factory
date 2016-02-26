@@ -62,8 +62,67 @@ $(document).ready(function(){
   });
 
   $('.wizard').on('click', '.table-card', function(event){
+    if(event.target.classList.contains('delete-button')){
+      event.stopPropagation();
+      //the delete is handled in a separate function
+      return;
+    }
     var index = $(this).attr("data-index");
     window.location = window.location.pathname+"?table="+index;
+  });
+
+  //listen to the icon upload input
+  $('.wizard').on('change', '#file', function(event){
+    var r = new FileReader();
+    var file = event.target.files[0];
+    var id = event.target.attributes["data-id"].value;
+    var iconData = {
+      type: file.type,
+      name: file.name
+    };
+    r.onloadend = function(){
+      var iconCanvas = document.createElement('canvas');
+      var iconContext = iconCanvas.getContext('2d');
+      var icon = new Image();
+      icon.onload = function(){
+        var width = icon.width;
+        var height = icon.height;
+        if(width > 200 || height > 200){
+          if(width > height){
+            height = (height / width) * 200;
+            width = 200;
+          }
+          else if(height > width) {
+            width = (width / height) * 200;
+            height = 200;
+          }
+          else{
+            width = 200;
+            height = 200;
+          }
+        }
+        iconCanvas.width = 200;
+        iconCanvas.height = 200;
+        iconContext.drawImage(icon, ((iconCanvas.width - width) / 2), ((iconCanvas.height - height) / 2) , width, height);
+        iconData.data = iconCanvas.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, "");
+        $(".icon img").attr("src", iconCanvas.toDataURL("image/png"));
+        $.post("/api/iconupload/"+id, {icon:iconData}).success(function(data){
+
+        });
+
+      };
+      icon.src = r.result;
+    }
+    r.readAsDataURL(file);
+  });
+
+  $('.wizard').on('click', '.delete-button', function(event){
+    var item = event.target.parentNode.attributes["data-item"].value;
+    var index = event.target.parentNode.attributes["data-index"].value;
+    var dicId = event.target.parentNode.attributes["data-id"].value;
+    $.post('/api/delete'+item+'/'+dicId+'/'+index).success(function(response){
+      window.location.reload(true);
+    });
   });
 
   $('.autodetect-auth-container').on('click', '.autodetect-auth-cancel', function(event){

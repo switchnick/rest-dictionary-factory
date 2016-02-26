@@ -19,7 +19,10 @@
           when "API Key"
             include ./autodetect/api-key.jade
           when "OAuth"
-            include ./autodetect/oauth.jade          
+            if dictionary.auth_options.auth_version=="1.0"
+              include ./autodetect/oauth1.jade
+            else          
+              include ./autodetect/oauth2.jade          
       .center
         button.inline.primary-button.autodetect-auth-ok(type="submit") OK
         button.inline.primary-button.autodetect-auth-cancel(type="button") Cancel

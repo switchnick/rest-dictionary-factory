@@ -10,6 +10,7 @@ var express = require('express'),
     flash = require('connect-flash'),
     Auth = require(__dirname+'/server/controllers/auth'),
     Dictionary = require( __dirname+'/server/controllers/dictionaries'),
+    busboy = require('connect-busboy'),
     Defaults = require('./defaults');
 
 mongoose.connect(config.mongo);
@@ -26,6 +27,8 @@ app.use(expressSession({ secret: "thecolonelwillnevertell"}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(busboy());
 
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({limit: '10mb'}));

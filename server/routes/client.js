@@ -21,6 +21,7 @@ router.get('/login', function(req, res){
 router.get('/dashboard', Auth.isLoggedIn, function(req, res, next){
   //reset the current session variables
   req.session.info = null;
+  req.session.icon = null;
   req.session.dictionary = null;
   req.session.curr_dictionary = null;
   req.session.sha = null;
@@ -39,7 +40,25 @@ router.get('/new', Auth.isLoggedIn, function(req, res, next){
   res.render('wizard/create.jade', {user: req.user});
 });
 router.get('/general/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
+  var query = {
+    user: req.session.info.owner,
+    repo: req.session.info.name,
+    path: 'icon.png'
+  };
+  if(!req.session.icon){
+    GitHelper.getContent(req, res, query, function(content){
+      if(content.err){
+        req.flash('error', content.err);
+      }
+      else{
+        req.session.icon = "data:image/png;base64," + content.content;
+        res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', icon: req.session.icon, defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
+      }
+    });
+  }
+  else{
+    res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', icon: req.session.icon, defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
+  }
 });
 router.get('/authentication/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
@@ -98,11 +117,12 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
           };
           GitHelper.createContent(req, res, jsonContent, function(content){
             response.dictionary = content.content.path;
+            response.dictionary_url = "https://api.github.com/repos/"+repo.owner.login+"/"+repo.name+"/contents/"+content.content.path;
+            console.log('dictionary_url');
+            console.log(response.dictionary_url);
             var iconurl = "./default-icon.png";
             var icon = fs.readFileSync(iconurl);
-            console.log(icon);
             icon = new Buffer(icon).toString('base64');
-            console.log(icon);
             var iconContent = {
               user: repo.owner.login,
               repo: repo.name,
