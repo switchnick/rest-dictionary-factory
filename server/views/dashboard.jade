@@ -12,7 +12,7 @@ div.container.page
             .icon
               img(src="#{dic.icon}")    
             .actions
-              a.download-button Download
+              a.download-button(href="https://github.com/#{dic.owner}/#{dic.name}/archive/master.zip") Download
               form(action="/delete/#{dic._id}" method="post")
                 button.delete-button(href="")
 include ./footer.jade
