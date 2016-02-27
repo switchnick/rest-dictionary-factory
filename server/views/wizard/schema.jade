@@ -36,7 +36,7 @@ include ../autodetect-auth.jade
         .spacer
         if dictionary.tables[tableIndex].fields
           each field, index in dictionary.tables[tableIndex].fields
-            .field-card.card
+            .field-card.card(data-item="field" data-id="#{info._id}" data-parent-index='#{tableIndex}' data-index='#{index}')
               h3                          
                 input(value="#{field.qName}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.qName")
               .sub-title              

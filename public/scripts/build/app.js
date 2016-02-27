@@ -120,7 +120,14 @@ $(document).ready(function(){
     var item = event.target.parentNode.attributes["data-item"].value;
     var index = event.target.parentNode.attributes["data-index"].value;
     var dicId = event.target.parentNode.attributes["data-id"].value;
-    $.post('/api/delete'+item+'/'+dicId+'/'+index).success(function(response){
+    var url = "/api/delete"+item+"/"+dicId+"/";
+    var parentIndex;
+    if(event.target.parentNode.attributes["data-parent-index"]){
+      parentIndex = event.target.parentNode.attributes["data-parent-index"].value
+      url+= parentIndex + "/";
+    }
+    url+= index;
+    $.post(url).success(function(response){
       window.location.reload(true);
     });
   });

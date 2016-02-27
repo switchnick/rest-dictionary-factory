@@ -87,6 +87,21 @@ router.post('/deletetable/:id/:index', Auth.isLoggedIn, MongoHelper.getInfo, Git
   }
 });
 
+router.post('/deletefield/:id/:tableindex/:fieldindex', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  if(!req.params.id || !req.params.tableindex ||!req.params.fieldindex){
+    req.flash('error', "There was a problem deleting the field");
+    if(req.params.tableindex){
+      res.redirect('/schema/'+req.params.id+'?table='+ req.params.tableindex);
+    }else {
+      res.redirect('/schema/'+req.params.id);
+    }
+  }
+  else {
+    req.session.dictionary.tables[req.params.tableindex].fields.splice(req.params.fieldindex, 1);
+    res.redirect('/schema/'+req.params.id+'?table='+ req.params.tableindex);
+  }
+});
+
 router.post('/iconupload/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
     var query = {
       user: req.session.info.owner,
