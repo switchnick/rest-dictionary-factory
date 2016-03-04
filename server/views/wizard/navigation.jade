@@ -12,3 +12,18 @@ div.container
     .col-md-2
       div(class='nav-button' class='card' class=page=='schema'?'active':'')
         a(href="/schema/#{info._id}?table=0") Schema
+  .row
+    .col-md-12
+      .spacer
+      .float-left
+        h1.float-left #{info.display_name}
+        if dictionary.public === true 
+          span.float-left.status.published Published
+        else
+          span.float-left.status Unpublished
+      .float-right           
+        button.save.primary-button Save        
+    .col-md-12
+      .align-right
+        p.save-successful(style='display:none;') Changes successfully save and committed
+        p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.

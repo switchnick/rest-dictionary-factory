@@ -1,12 +1,7 @@
 include ../header.jade
 include ./navigation.jade
 include ../errorbanner.jade
-.container.wizard.general
-  h1 #{info.display_name}
-  if dictionary.public === true 
-    span.status.published Published
-  else
-    span.status Unpublished
+.container.wizard.general  
   h2 How do you do?
   .row
     .col-md-8
@@ -22,11 +17,7 @@ include ../errorbanner.jade
       input.form-control(placeholder="Where's the data at?" value="#{dictionary.data_element  || ''}" data-provider="github" data-prop="data_element")
       p.hint In a lot of cases this is normally 
         strong data      
-      br
-      .spacer
-      button.save.primary-button Save
-      p.save-successful(style='display:none;') Changes successfully save and committed
-      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.
+      br      
     .col-md-4
       label Icon
       .icon

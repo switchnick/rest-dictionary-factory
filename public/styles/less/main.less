@@ -1,11 +1,15 @@
 @import "colours.less";
 @import "fonts.less";
 
-.body{  
+.body{
+  font-family: Stellar;
   color: @default-text;
   background-color: @dust;
-
-
+  background-image: url(/resources/footer.png);
+  background-position: bottom;
+  background-attachment: fixed;
+  background-size: contain;
+  background-repeat: repeat-x;
   label{
     font-weight: normal;
     margin: 3px 0px;
@@ -17,6 +21,18 @@
 
   .content{
     padding: 10px 0px;
+  }
+
+  .float-right{
+    float: right;
+  }
+
+  .float-left{
+    float: left;
+  }
+
+  .align-right{
+    text-align: right;
   }
 
   .primary-button, .secondary-button{
@@ -110,7 +126,7 @@
   }
 
   h1,h2,h3,h4{
-    margin-top: 12px;
+    margin-top: 5px;
     margin-bottom: 5px;
   }
 
@@ -173,7 +189,7 @@
       bottom: 10px;
       left: 10px;
     }
-    margin-bottom: 5px;
+    margin-bottom: 15px;
   }
 
   .hint{
@@ -226,6 +242,10 @@
 
   .inline{
     display: inline-block;
+  }
+
+  .status{
+    line-height: 34px;    
   }
 
 @import "header.less";

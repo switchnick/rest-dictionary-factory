@@ -2,8 +2,7 @@ include ../header.jade
 include ./navigation.jade
 include ../errorbanner.jade
 include ../autodetect-auth.jade
-.container.wizard.general
-  h1 #{info.display_name}
+.container.wizard.general  
   h2 How do I look?
   .row
     .col-md-3
@@ -50,10 +49,5 @@ include ../autodetect-auth.jade
           h3 No fields
     else
       col-md-9
-        h3 No Tables
-    .col-md-12
-      .spacer
-      button.save.primary-button Save
-      p.save-successful(style='display:none;') Changes successfully save and committed
-      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.      
+        h3 No Tables      
 include ../footer.jade

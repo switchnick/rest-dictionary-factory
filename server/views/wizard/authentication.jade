@@ -2,7 +2,6 @@ include ../header.jade
 include ./navigation.jade
 include ../errorbanner.jade
 .container.wizard.general
-  h1 #{info.display_name}
   h2 What's the magic word?
   .row
     for auth in defaults.auth_methods
@@ -28,6 +27,7 @@ include ../errorbanner.jade
           )
   .row
     .col-md-12
+      .spacer
       case dictionary.auth_method
         when "None"
           include ./auth/none.jade
@@ -38,10 +38,5 @@ include ../errorbanner.jade
         when "OAuth"
           include ./auth/oauth.jade
         default
-          include ./auth/none.jade
-    .col-md-12
-      .spacer
-      button.save.primary-button Save
-      p.save-successful(style='display:none;') Changes successfully save and committed
-      p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.                      
+          include ./auth/none.jade                         
 include ../footer.jade
