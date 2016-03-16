@@ -3,11 +3,15 @@ var Test = require('./test'),
 
 module.exports = {
   isLoggedIn: function(req, res, next){
-    console.log('a1');
     if(req.isAuthenticated()){
+      console.log(req.user);
+      console.log(req.url);
+      console.log('authenticated');
       next();
     }
     else{
+      console.log(req.url);
+      console.log(req);
       console.log('not authenticated');
       res.render('login.jade', {user: req.user});
     }

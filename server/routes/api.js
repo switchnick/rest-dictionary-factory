@@ -1,4 +1,5 @@
 var express = require('express'),
+    expressSession = require('express-session'),
     router = express.Router(),
     Auth = require('../controllers/auth'),
     Error = require('../controllers/error'),
@@ -8,6 +9,7 @@ var express = require('express'),
     MongoHelper = require('../controllers/mongo-helper'),
     Defaults = require('../../defaults'),
     config = require('../../config'),
+    passport = require('passport'),
     fs = require('fs'),
     stream = require('stream'),
     Request = require('request'),
@@ -24,11 +26,8 @@ router.post('/updatesessiondictionary/:id', Auth.isLoggedIn, MongoHelper.getInfo
     var provider = req.body.provider;
     var prop = req.body.prop;
     var data = req.body.data;
-    console.log(provider);
     if(provider=="mongo"){
-      console.log('updating info');
       req.session.info[prop] = data;  //should only ever go 1 level deep on the mongo data
-      console.log(req.session.info);
     }
     else if(provider=="temp"){
       console.log('updating temp');
@@ -59,7 +58,6 @@ router.post('/updatesessiondictionary/:id', Auth.isLoggedIn, MongoHelper.getInfo
           dicProp = dicProp[props[i]];
         }
       }
-      console.log(req.session.dictionary);
     }
     res.json({});
   }
@@ -119,7 +117,6 @@ router.post('/iconupload/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.s
       req.session.icon = "data:image/png;base64,"+icon;
       GitHelper.updateContent(req, res, query, function(response){
         if(response.err){
-          console.log(response);
           res.json(response);
         }
         else{
@@ -211,6 +208,8 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
         else{
           var data = JSON.parse(body);
         }
+        console.log("Auto Detect Result");
+        console.log(data);
         var fields = [];
         if(data && data.length>0){
           for (var key in data[0]){
@@ -257,7 +256,6 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
 });
 
 router.get('/oauth1_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionary, function(req, res, next){
-  console.log(req.query);
   if(!req.params.id || !req.query.consumer_key || !req.query.consumer_secret){
     //handle the issue
     req.flash('error', 'Missing information. Please check that a valid dictionary id, consumer key and consumer secret have been provided.');
@@ -284,23 +282,45 @@ router.get('/oauth1_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessio
   }
 });
 
-router.get('/oauth2_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionary, function(req, res, next){
-  console.log(req.query);
+//router.get('/oauth2_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionary, function(req, res, next){
+router.get('/oauth2_authorize/:id', function(req, res, next){
   if(!req.params.id || !req.query.clientid){
     //handle the issue
     req.flash('error', 'Missing information. Please check that a valid dictionary id and client id have been provided.');
     res.redirect('error.jade');
   }
   else{
-    if(!req.session.temp){
-      req.session.temp = {};
-    }
-    req.session.temp.client_id = req.query.clientid;
-    res.render('oauth2-authorize.jade', {clientId: req.query.clientid});
+    req.body.username = req.query.clientid;
+    req.body.password = "anonymous";
+    passport.authenticate('anonymous', function(err, user){
+      if(err){
+        req.flash('error', err);
+        res.redirect('error.jade');
+      }
+      else{
+        req.logIn(user, function(err){
+          if(err){
+            req.flash('error', err);
+            res.redirect('error.jade');
+          }
+          else{
+            MongoHelper.getInfoAnon(req, res, function(){
+              GitHelper.setSessionDictionaryAnon(req, res, function(){
+                if(!req.session.temp){
+                  req.session.temp = {};
+                }
+                req.session.temp.client_id = req.query.clientid;
+                res.render('oauth2-authorize.jade', {clientId: req.query.clientid, info: req.session.info});
+              });
+            });
+          }
+        });
+      }
+    })(req, res, next);
   }
 });
 
-router.post('/oauth2_authorize', function(req, res){
+router.use('/oauth2_authorize/:id/done',  Auth.isLoggedIn, MongoHelper.getInfoAnon, GitHelper.setSessionDictionaryAnon, function(req, res, next){
   if(req.body && req.body.client_secret){
     if(!req.session.temp){
       //we have bigger problems if this doesn't exist
@@ -308,7 +328,10 @@ router.post('/oauth2_authorize', function(req, res){
     }
     req.session.temp.client_secret = req.body.client_secret;
   }
-  res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&redirect_uri="+config.oauth.redirect_uri);
+  req.session.save(function(err){
+    res.set('session', req.sessionID);
+    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&redirect_uri="+config.oauth.redirect_uri);
+  });
 });
 
 router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
@@ -340,7 +363,6 @@ router.get('/public', function(req, res){
       res.send({err:err});
     }
     else{
-      console.log(result);
       res.send({configs:result});
     }
   });
@@ -393,5 +415,14 @@ router.get('/save/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessi
     }
   });
 });
+
+var randomString = function(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
 
 module.exports = router;

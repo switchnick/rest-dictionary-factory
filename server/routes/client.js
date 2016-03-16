@@ -108,6 +108,7 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
           dicData.paging_method = "None";
           dicData.paging_options = {};
           dicData.tables = [];
+          dicData.id = response._id;
           var jsonContent = {
             user: repo.owner.login,
             repo: repo.name,
@@ -131,8 +132,7 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
               message: "Initial Icon"
             };
             GitHelper.createContent(req, res, iconContent, function(content){
-              response.icon = content.content.download_url;
-              console.log(response);
+              response.icon = content.content.download_url;              
               response.save(function(err){
                 if(err){
                   console.log(err);
