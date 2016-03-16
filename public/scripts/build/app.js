@@ -25,6 +25,12 @@ $(document).ready(function(){
     var data = $(this).val();
     updateSessionDictionary(provider, prop, data);
   });
+  $('.oauth-helper').on('focusout', '.form-control[type!="radio"][type!="checkbox"]', function(event){
+    var provider = $(this).attr("data-provider");
+    var prop = $(this).attr("data-prop");
+    var data = $(this).val();
+    updateSessionDictionary(provider, prop, data);
+  });
 
   //listen to change on radio buttons
   $('.wizard').on('change', '.form-control[type="radio"],.form-control[type="checkbox"], .form-control.drop-down', function(event){
@@ -36,7 +42,7 @@ $(document).ready(function(){
   });
 
   //listen to the save button
-  $('.wizard').on('click', '.save', function(event){
+  $('.navigation').on('click', '.save', function(event){
     var id = window.location.pathname.split("/").pop();
     $.get('/api/save/'+id).success(function(data){
       if(data.err){

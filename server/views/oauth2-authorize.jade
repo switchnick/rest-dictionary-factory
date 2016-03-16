@@ -1,10 +1,11 @@
 include ./header.jade
 div.container.page  
-  .card.token-card
+  .card.token-card.oauth-helper
     h1 Authorize
-    form(method="post" action="/api/oauth2_authorize")
-      label Please enter the client secret for #{clientId}
-      input.form-control.auth-item(type='text' name='client_secret' value="")      
-      p.hint Please enter your client secret.
-      button.secondary-button(type="submit" target="_blank") Authorize    
+    //form(method="post" action="/api/oauth2_authorize/#{info._id}")
+    label Please enter the client secret for 
+      strong #{clientId}
+    input.form-control.auth-item(type='password' data-provider="temp" data-prop="client_secret" name='client_secret' value="")      
+    p.hint Please enter your client secret.
+    a.secondary-button(href="/api/oauth2_authorize/#{info._id}/done") Authorize    
 include ./footer.jade
