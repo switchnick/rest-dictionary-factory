@@ -1,5 +1,5 @@
 //listen to focus out on text types
-$('.wizard').on('focusout', '.form-control[type!="radio"][type!="checkbox"]', function(event){
+$('.wizard').on('focusout', '.form-control[type!="radio"][type!="checkbox"], .field-prop', function(event){
   var provider = $(this).attr("data-provider");
   var prop = $(this).attr("data-prop");
   var data = $(this).val();
@@ -41,6 +41,19 @@ $('.navigation').on('click', '.save', function(event){
         $('.save-successful').hide();
         $('.save-description').show();
       }, 1000);
+    }
+  });
+});
+
+//listen to the publish button
+$('.navigation').on('click', '.publish', function(event){
+  var id = window.location.pathname.split("/").pop();
+  $.get('/api/publish/'+id).success(function(data){
+    if(data.err){
+      console.log(data.err);
+    }
+    else{
+      window.location.reload(true);
     }
   });
 });

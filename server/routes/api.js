@@ -8,7 +8,6 @@ var express = require('express'),
     Test = require('../controllers/test'),
     MongoHelper = require('../controllers/mongo-helper'),
     Defaults = require('../../defaults'),
-    config = require('../../config'),
     passport = require('passport'),
     fs = require('fs'),
     stream = require('stream'),
@@ -82,6 +81,25 @@ router.post('/deletetable/:id/:index', Auth.isLoggedIn, MongoHelper.getInfo, Git
   else {
     req.session.dictionary.tables.splice(req.params.index, 1);
     res.redirect('/schema/'+req.params.id);
+  }
+});
+
+router.use('/addfield/:id/:tableindex', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  if(!req.params.id || !req.params.tableindex){
+    req.flash('error', "There was a problem adding the field");
+    if(req.params.tableindex){
+      res.redirect('/schema/'+req.params.id+'?table='+ req.params.tableindex);
+    }else {
+      res.redirect('/schema/'+req.params.id);
+    }
+  }
+  else{
+    req.session.dictionary.tables[req.params.tableindex].fields.splice(0, 0, {
+      qName: "name",
+      path: "path",
+      type: "String"
+    });
+    res.redirect('/schema/'+req.params.id+'?table='+ req.params.tableindex);
   }
 });
 
@@ -268,7 +286,7 @@ router.get('/oauth1_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessio
     req.session.temp.consumer_key = req.query.consumer_key;
     req.session.temp.consumer_secret = req.query.consumer_secret;
     var oauthparams = {
-      callback: config.oauth.redirect_uri,
+      callback: process.env.oauth_redirect_uri,
       consumer_key: req.session.temp.consumer_key,
       consumer_secret: req.session.temp.consumer_secret
     };
@@ -330,14 +348,18 @@ router.use('/oauth2_authorize/:id/done',  Auth.isLoggedIn, MongoHelper.getInfoAn
   }
   req.session.save(function(err){
     res.set('session', req.sessionID);
-    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&redirect_uri="+config.oauth.redirect_uri);
+    var oauth_redirect_url_parameter = "redirect_uri";
+    if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
+       oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
+    }
+    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
   });
 });
 
 router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   if(req.session.dictionary.auth_options.auth_version=="1.0"){
     var oauthparams = {
-      callback: config.oauth.redirect_uri,
+      callback: process.env.oauth_redirect_uri,
       consumer_key: req.session.temp.consumer_key,
       consumer_secret: req.session.temp.consumer_secret
     };
@@ -350,7 +372,11 @@ router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.set
     });
   }
   else{
-    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&redirect_uri="+config.oauth.redirect_uri);
+    var oauth_redirect_url_parameter = "redirect_uri";
+    if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
+       oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
+    }
+    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
   }
   //res.redirect("https://github.com/login/oauth/authorize?client_id="+req.session.temp.client_id+"&redirect_uri=http://localhost:4000/auth/oauth");
 });
@@ -384,6 +410,19 @@ router.get('/public/dictionary/:id', function(req, res){
       GitHelper.getContentPublic(gitQuery, function(dictionary){
         res.send(dictionary);
       });
+    }
+  });
+});
+
+router.get('/publish/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  var public = req.session.info.public;
+  Dictionary.update(req.params.id, {public: !public} , function(err){
+    if(err){
+      res.json({err: err});
+    }
+    else{
+      req.session.info.public = !public;
+      res.json({});
     }
   });
 });

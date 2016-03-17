@@ -1,14 +1,14 @@
 var GitHubStrategy    = require('passport-github').Strategy;
 
-module.exports = function(passport, config){
+module.exports = function(passport){
   console.log('we got here too');
   passport.use(new GitHubStrategy({
-      clientID: config.github.clientId,
-      clientSecret: config.github.secret,
+      clientID: process.env.github_clientId,
+      clientSecret: process.env.github_secret,
       scope: 'public_repo'
     },
     function(accessToken, refreshToken, profile, done) {
-      console.log('uugh');    
+      console.log('uugh');
       profile.token = accessToken;
       // asynchronous verification, for effect...
       process.nextTick(function () {

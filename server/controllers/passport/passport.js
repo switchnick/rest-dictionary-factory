@@ -1,6 +1,6 @@
-module.exports = function(passport, config){
+module.exports = function(passport){
 
-  passport.serializeUser(function(user, done) {    
+  passport.serializeUser(function(user, done) {
     done(null, user);
   });
 
@@ -11,6 +11,6 @@ module.exports = function(passport, config){
 
   //Configure login strategy
   require('./anonymous.js')(passport);
-  require('./login.js')(passport, config);
+  require('./login.js')(passport);
 
 }

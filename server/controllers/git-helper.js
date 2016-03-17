@@ -1,7 +1,6 @@
 //this file just helps to clean up the code structure of the client.js route file
 var git = require('github'),
-    atob = require('atob'),
-    config = require('../../config');
+    atob = require('atob');
 
 GitHub = new git({
   version: "3.0.0",
@@ -44,7 +43,7 @@ module.exports = {
       next();
     }
   },
-  setSessionDictionaryAnon: function(req, res, next){    
+  setSessionDictionaryAnon: function(req, res, next){
     if(!req.session.dictionary || req.session.curr_dictionary != req.params.id){
       GitHub.repos.getContent({user: req.session.info.owner, repo: req.session.info.name, path: req.session.info.dictionary}, function(err, content){
         if(err){
@@ -103,7 +102,7 @@ module.exports = {
     });
   },
   getContentPublic: function(query, callbackFn){
-    GitHub.authenticate({type: "token", token: config.github.token});
+    GitHub.authenticate({type: "token", token: process.env.github_token});
     console.log(query);
     GitHub.repos.getContent(query, function(err, content){
       if(err){

@@ -1,4 +1,63 @@
 include ./header.jade
-div.container.page
-  h1 Summary
+div.container.page.summary  
+  .row
+    .col-md-12
+      .float-left
+        h1.float-left #{info.display_name}                      
+      .float-right           
+        a.primary-button(href="https://github.com/#{dictionary.owner}/#{dictionary.name}/archive/master.zip") Download      
+  .row       
+    .col-md-12
+      .spacer
+      .vertical-spacer
+      .card
+        h4 General
+        .row
+          .col-md-6
+            label Endpoint
+            | #{dictionary.base_endpoint || 'Not specified'}            
+          .col-md-6
+            label Data Element
+            | #{dictionary.data_element  || 'Not specified'}
+      .vertical-spacer
+    .col-md-12
+      .card
+        h4 Authentication
+        .row
+          .col-md-12
+            label Type
+            | #{dictionary.auth_method}
+          each value, key in dictionary.auth_options
+            .col-md-6
+              label #{key.replace(/_/g,' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})}
+              | #{value}
+      .vertical-spacer
+    .col-md-12
+      .card
+        h4 Paging
+        .row
+          .col-md-12
+            label Type
+            | #{dictionary.paging_method}
+          each value, key in dictionary.paging_options
+            .col-md-6
+              label #{key.replace(/_/g,' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})}
+              | #{value}
+      .vertical-spacer
+    .col-md-12
+      .card
+        h4 Schema
+        .row
+          each table in dictionary.tables
+            .col-md-4
+              label #{table.qName} (#{table.fields.length} fields)
+              ul.plainlist
+                - var i = 0;
+                - var maxFields = Math.min(table.fields.length, 10);
+                while i < maxFields
+                  li #{table.fields[i].qName} 
+                  - i++
+                if(table.fields.length > maxFields)
+                  li  + #{table.fields.length - maxFields} more 
+      .vertical-spacer
 include ./footer.jade

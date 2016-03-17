@@ -36,6 +36,19 @@ router.get('/dashboard', Auth.isLoggedIn, function(req, res, next){
     }
   });
 });
+router.get('/public', function(req, res, next){
+  //reset the current session variables
+  Dictionary.get({public: true}, function(err, response){
+    if(err){
+      console.log(err);
+      req.flash('error', err);
+      res.render('error.jade', {user: req.user, error: req.flash('error')});
+    }
+    else{
+      res.render('public.jade', {user: req.user, dictionaries: response});
+    }
+  });
+});
 router.get('/new', Auth.isLoggedIn, function(req, res, next){
   res.render('wizard/create.jade', {user: req.user});
 });
@@ -59,6 +72,9 @@ router.get('/general/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSe
   else{
     res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', icon: req.session.icon, defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
   }
+});
+router.get('/summary/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionaryAnon, function(req, res, next){
+    res.render('summary.jade', {dictionary: req.session.dictionary, info: req.session.info, icon: req.session.icon, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 router.get('/authentication/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
@@ -132,7 +148,7 @@ router.post('/create', Auth.isLoggedIn, function(req, res, next){
               message: "Initial Icon"
             };
             GitHelper.createContent(req, res, iconContent, function(content){
-              response.icon = content.content.download_url;              
+              response.icon = content.content.download_url;
               response.save(function(err){
                 if(err){
                   console.log(err);
