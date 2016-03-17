@@ -1,3 +1,20 @@
-.library.content
-  div.container
-    h1 Public Dictionaries
+include ./header.jade
+div.container.page  
+  div.row
+    div.col-md-12
+      h1.float-left Dictionary Catalog
+  div.row
+    div.col-md-12
+      .content
+        .row
+          each dic in dictionaries      
+            .col-md-3
+              .card.dictionary
+                a.dictionary-link(href="/summary/#{dic._id}")
+                  .title #{dic.display_name}
+                  .sub-title #{dic.owner}
+                  .icon
+                    img(src="#{dic.icon}")    
+                  .actions
+                    a.download-button(href="https://github.com/#{dic.owner}/#{dic.name}/archive/master.zip") Download                  
+include ./footer.jade

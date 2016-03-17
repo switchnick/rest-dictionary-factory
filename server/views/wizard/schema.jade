@@ -31,15 +31,15 @@ include ../autodetect-auth.jade
         else
           h3 Fields
         a(href="/api/autodetectcheck/#{info._id}").inline.primary-button.auto-detect Auto Detect
-        button.inline.secondary-button Add Field
+        a(href="/api/addfield/#{info._id}/#{tableIndex}").inline.secondary-button Add Field
         .spacer
         if dictionary.tables[tableIndex].fields
           each field, index in dictionary.tables[tableIndex].fields
             .field-card.card(data-item="field" data-id="#{info._id}" data-parent-index='#{tableIndex}' data-index='#{index}')
               h3                          
-                input(value="#{field.qName}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.qName")
+                input.field-prop(value="#{field.qName}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.qName")
               .sub-title              
-                input(value="#{field.path}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.path")              
+                input.field-prop(value="#{field.path}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.path")              
               .field-type
                 select.form-control(value="#{field.type}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.type")              
                   each val in defaults.sense_data_types

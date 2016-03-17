@@ -13,7 +13,13 @@ var express = require('express'),
     busboy = require('connect-busboy'),
     Defaults = require('./defaults');
 
-mongoose.connect(config.mongo);
+if(config){
+  for(var c in config){
+      process.env[c] = config[c];
+  }
+}
+
+mongoose.connect(process.env.mongo);
 
 require('./server/controllers/passport/passport.js')(passport, config);
 

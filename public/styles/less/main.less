@@ -144,9 +144,19 @@
     font-size: 18px;
     color: @primary;
   }
+  h4{
+    font-size: 16px;
+    color: @default-text;
+    font-weight: bold;
+  }
 
   ul{
     list-style-type: none;
+  }
+
+  .plainlist{
+    margin: 0;
+    padding: 0;
   }
 
   .description{
@@ -194,6 +204,13 @@
     margin-bottom: 15px;
   }
 
+  .dictionary-link{
+    display: block;
+    &:hover, &:visited{
+      text-decoration: none;
+    }
+  }
+
   .hint{
     color: @smog;
     font-size: 12px;
@@ -211,6 +228,15 @@
   .spacer{
     border: 1px solid @fog;
     margin: 5px 0;
+  }
+
+  .horizontal-spacer{
+    width: 10px;
+    height: 1px;
+  }
+
+  .vertical-spacer{
+    height: 10px;
   }
 
   .smokescreen{
@@ -254,6 +280,7 @@
 @import "home.less";
 @import "login.less";
 @import "wizard.less";
+@import "summary.less";
 @import "errorbanner.less";
 
 }

@@ -3,8 +3,7 @@ var express = require('express'),
     passport = require('passport'),
     request = require('request'),
     Auth = require('../controllers/auth'),
-    qs = require('querystring'),
-    config = require('../../config');
+    qs = require('querystring');
 
 router.get('/login', passport.authenticate('github'), function(req, res){
 

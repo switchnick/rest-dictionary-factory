@@ -16,14 +16,15 @@ div.container.navigation
     .col-md-12
       .spacer
       .float-left
-        h1.float-left #{info.display_name}
-        if dictionary.public === true 
-          span.float-left.status.published Published
-        else
-          span.float-left.status Unpublished
+        h1.float-left #{info.display_name}        
+        span #{info.public===true?'Published':'Unpublished'}
+      .float-right      
+        button.save.primary-button Save     
+      .float-right.horizontal-spacer
       .float-right           
-        button.save.primary-button Save        
+        button.publish.secondary-button #{info.public===true?'Unpublish':'Publish'}
     .col-md-12
-      .align-right
+      .align-right        
+        p.hint.publish-description Clicking 'Publish' will make your dictionary available in the 'Public Dictionaries'. Until then only you can see it (except for in GitHub).
         p.save-successful(style='display:none;') Changes successfully save and committed
-        p.hint.save-description Clicking save will commit the changes. Until then they will only be stored against the current session.
+        p.hint.save-description Clicking 'Save' will commit the changes. Until then they will only be stored against the current session.

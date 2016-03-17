@@ -11,12 +11,13 @@ div.container.page
           each dic in dictionaries      
             .col-md-3
               .card.dictionary
-                a(href="/general/#{dic._id}").title #{dic.display_name}
-                a.sub-title #{dic.owner}
-                .icon
-                  img(src="#{dic.icon}")    
-                .actions
-                  a.download-button(href="https://github.com/#{dic.owner}/#{dic.name}/archive/master.zip") Download
-                  form(action="/delete/#{dic._id}" method="post")
-                    button.delete-button(href="")
+                a.dictionary-link(href="/general/#{dic._id}")
+                  .title #{dic.display_name}
+                  .sub-title #{dic.owner}
+                  .icon
+                    img(src="#{dic.icon}")    
+                  .actions
+                    a.download-button(href="https://github.com/#{dic.owner}/#{dic.name}/archive/master.zip") Download
+                    form(action="/delete/#{dic._id}" method="post")
+                      button.delete-button(href="")
 include ./footer.jade
