@@ -5,7 +5,6 @@ var express = require('express'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     request = require('request'),
-    config = require('./config'),
     git = require('github'),
     flash = require('connect-flash'),
     Auth = require(__dirname+'/server/controllers/auth'),
@@ -13,12 +12,18 @@ var express = require('express'),
     busboy = require('connect-busboy'),
     Defaults = require('./defaults');
 
-if(config){
-  for(var c in config){
-      process.env[c] = config[c];
+try{
+  var config = require('./config');
+  if(config){
+    for(var c in config){
+        process.env[c] = config[c];
+    }
   }
 }
-
+catch(err){
+  //config file doesn't exist
+  console.log("No configuration file found. Not an issue if we're deploying on heroku");
+}
 console.log(process.env);
 
 mongoose.connect(process.env.mongo);
