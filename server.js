@@ -19,6 +19,8 @@ if(config){
   }
 }
 
+console.log(process.env);
+
 mongoose.connect(process.env.mongo);
 
 require('./server/controllers/passport/passport.js')(passport, config);
