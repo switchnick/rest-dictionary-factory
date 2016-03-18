@@ -40,6 +40,9 @@ router.post('/updatesessiondictionary/:id', Auth.isLoggedIn, MongoHelper.getInfo
       for (var i=0;i<props.length;i++){
         if(i==props.length-1){
           //we assign the value to the current prop
+          if(data=="true" || data=="false"){
+            data = data=="true"?true:false;
+          }
           dicProp[props[i]] = data;
         }
         else{
@@ -58,6 +61,7 @@ router.post('/updatesessiondictionary/:id', Auth.isLoggedIn, MongoHelper.getInfo
         }
       }
     }
+    console.log(dicProp);
     res.json({});
   }
   catch(err){
@@ -192,7 +196,20 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
       break;
     case "OAuth":
       if(req.session.dictionary.auth_options.auth_version=="2.0"){
-        headers.Authorization = "Bearer "+ req.body.access_token;
+        if(req.session.dictionary.auth_options.oauth_params_in_query){
+          if(requestUrl.indexOf("?")==-1){
+            requestUrl+="?";
+          }
+          else{
+            requestUrl+="&";
+          }
+          requestUrl += "access_token=";
+          requestUrl += req.body.access_token;
+        }
+        else{
+          headers.Authorization = "Bearer "+ req.body.access_token;
+        }
+
       }
       else{
         oauthparams = {
@@ -220,11 +237,12 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
     }
     else{
       try{
+        var data = JSON.parse(body);
         if(req.session.dictionary.data_element && req.session.dictionary.data_element != ''){
-          var data = JSON.parse(body)[req.session.dictionary.data_element];
-        }
-        else{
-          var data = JSON.parse(body);
+          var dataElement = req.session.dictionary.data_element.split(".");
+          for (var i=0;i<dataElement.length;i++){
+            data = data[dataElement[i]];
+          }          
         }
         console.log("Auto Detect Result");
         console.log(data);
@@ -378,7 +396,6 @@ router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.set
     }
     res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
   }
-  //res.redirect("https://github.com/login/oauth/authorize?client_id="+req.session.temp.client_id+"&redirect_uri=http://localhost:4000/auth/oauth");
 });
 
 router.get('/public', function(req, res){

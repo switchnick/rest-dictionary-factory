@@ -36,9 +36,17 @@ $(document).ready(function(){
   $('.wizard').on('change', '.form-control[type="radio"],.form-control[type="checkbox"], .form-control.drop-down', function(event){
     var provider = $(this).attr("data-provider");
     var prop = $(this).attr("data-prop");
-    var data = $(this).val();
+    var data;
+    if(event.target.type=="checkbox"){
+      data = $(this)[0].checked;
+    }
+    else{
+      data = $(this).val();
+    }
     updateSessionDictionary(provider, prop, data);
-    window.location = window.location;
+    if(event.target.type=="radio"){
+      window.location = window.location;
+    }
   });
 
   //listen to the save button

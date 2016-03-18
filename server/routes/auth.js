@@ -28,8 +28,11 @@ router.use('/oauth', function(req, res){
   }
   if(req.query){
     var data = req.query;
+    var tokenUrl = session.dictionary.auth_options.oauth_token_url;
     if(session.dictionary.auth_options.auth_version=="1.0"){
       var authData = qs.parse(req.body);
+      console.log("Received auth data");
+      console.log(authData);
       var oauthparams = {
         consumer_key: session.temp.consumer_key,
         consumer_secret: session.temp.consumer_secret,
@@ -37,8 +40,7 @@ router.use('/oauth', function(req, res){
         token_secret: data.oauth_token_secret,
         verifier: data.oauth_verifier
       };
-      var url = session.dictionary.auth_options.oauth_token_url;
-      request.post({url:url, oauth:oauthparams}, function(err, response, body){
+      request.post({url:tokenUrl, oauth:oauthparams}, function(err, response, body){
         var tokenData = qs.parse(body);
         res.render('token.jade', {token: tokenData.oauth_token, tokenSecret: tokenData.oauth_token_secret});
       });
@@ -46,12 +48,42 @@ router.use('/oauth', function(req, res){
     else{
       data.client_id = session.temp.client_id;
       data.client_secret = session.temp.client_secret;
-      request({url:session.dictionary.auth_options.oauth_token_url, formData: data}, function(err, response, body){
+      if(session.dictionary.auth_options.oauth_params_in_query){
+        if(tokenUrl.indexOf("?")==-1){
+          tokenUrl+="?";
+        }
+        else{
+          tokenUrl+="&";
+        }
+        for (var prop in data){
+          tokenUrl+=prop;
+          tokenUrl+="=";
+          tokenUrl+=data[prop];
+          tokenUrl+="&";
+        }
+        tokenUrl = tokenUrl.split("");
+        tokenUrl.pop();
+        console.log(tokenUrl);
+        tokenUrl = tokenUrl.join("");
+        var redirect_uri_parameter = "redirect_uri";
+        if(session.dictionary.auth_options.oauth_redirect_url_parameter && session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
+          redirect_uri_parameter = session.dictionary.auth_options.oauth_redirect_url_parameter
+        }
+        tokenUrl += "&";
+        tokenUrl += redirect_uri_parameter;
+        tokenUrl += "=";
+        tokenUrl += process.env.oauth_redirect_uri;
+      }
+      console.log(tokenUrl);
+      request({url:tokenUrl, formData: data}, function(err, response, body){
         if(err){
           console.log(err);
         }
         else{
-          var tokenData = qs.parse(body);
+          //var responseData = qs.parse(body);
+          var responseData = JSON.parse(body);
+          var tokenData = getTokens(responseData);
+          console.log(tokenData);
           res.render('token.jade', {token: tokenData.access_token});
         }
       });
@@ -61,5 +93,27 @@ router.use('/oauth', function(req, res){
     res.render('token.jade', {tokenInfo: req.body});
   }
 });
+
+function getTokens(data){
+  console.log(data);
+  var output = {};
+  output = traverseProperties(data, output);
+  return output;
+}
+
+function traverseProperties(input, output){
+  console.log(input);
+  for (var prop in input){
+    if(typeof input[prop] === "object"){
+      output = traverseProperties(input[prop], output);
+    }
+    else{
+      if(prop.indexOf("token")!=-1){
+        output[prop] = input[prop];
+      }
+    }
+  }
+  return output;
+}
 
 module.exports = router;
