@@ -2,42 +2,44 @@ include ../header.jade
 include ./navigation.jade
 include ../errorbanner.jade
 .container.wizard.general
-  h2 What's the magic word?
-  .row
-    for auth in defaults.auth_methods
-      .col-md-3
-        div(class='card' class='auth-method' class=dictionary.auth_method==auth.name?'active':'' data-provider='github' data-prop='auth_method' data-item='#{auth.name}')
-          .auth-type
-            h3 #{auth.name}
-          .auth-desc
-            p.hint #{auth.description}
-  if dictionary.auth_method=='OAuth'  
+  .card
+    h2 What's the magic word?
+    .row
+      for auth in defaults.auth_methods
+        .col-md-3
+          div(class='card' class='auth-method' class=dictionary.auth_method==auth.name?'active':'' data-provider='github' data-prop='auth_method' data-item='#{auth.name}')
+            .auth-type
+              h3 #{auth.name}
+            .auth-desc
+              p.hint #{auth.description}
+  .vertical-spacer
+  .card
+    if dictionary.auth_method=='OAuth'  
+      .row
+        .col-md-12
+          .auth-version
+            .vertical-spacer
+            label OAuth Version
+            br
+            span.inline 1.0
+            input.inline.form-control(type='radio' name='authversion' data-provider='github' data-prop='auth_options.auth_version' value='1.0'
+              checked=dictionary.auth_options.auth_version&&dictionary.auth_options.auth_version=='1.0'?'checked':'checked'
+            )
+            span.inline 2.0
+            input.inline.form-control(type='radio' name='authversion' data-provider='github' data-prop='auth_options.auth_version' value='2.0'
+              checked=dictionary.auth_options.auth_version&&dictionary.auth_options.auth_version=='2.0'?'checked':null
+            )
     .row
       .col-md-12
-        .auth-version
-          .vertical-spacer
-          label OAuth Version
-          br
-          span.inline 1.0
-          input.inline.form-control(type='radio' name='authversion' data-provider='github' data-prop='auth_options.auth_version' value='1.0'
-            checked=dictionary.auth_options.auth_version&&dictionary.auth_options.auth_version=='1.0'?'checked':'checked'
-          )
-          span.inline 2.0
-          input.inline.form-control(type='radio' name='authversion' data-provider='github' data-prop='auth_options.auth_version' value='2.0'
-            checked=dictionary.auth_options.auth_version&&dictionary.auth_options.auth_version=='2.0'?'checked':null
-          )
-  .row
-    .col-md-12
-      .spacer
-      case dictionary.auth_method
-        when "None"
-          include ./auth/none.jade
-        when "Basic"
-          include ./auth/basic.jade
-        when "API Key"
-          include ./auth/api-key.jade
-        when "OAuth"
-          include ./auth/oauth.jade
-        default
-          include ./auth/none.jade                         
+        case dictionary.auth_method
+          when "None"
+            include ./auth/none.jade
+          when "Basic"
+            include ./auth/basic.jade
+          when "API Key"
+            include ./auth/api-key.jade
+          when "OAuth"
+            include ./auth/oauth.jade
+          default
+            include ./auth/none.jade                         
 include ../footer.jade

@@ -13,12 +13,12 @@ br
 //- button.secondary-button.store_oauth_creds Store OAuth Credentials
 //- p.hint To simplify the authentication process for end users you can store your Client Id and Client Secret against the dictionary. These details will not be available publicly.
 .spacer
-  h4 Advanced
-  label Redirect Uri Parameter
-  input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_redirect_url_parameter || ''}" data-provider="github" data-prop="auth_options.oauth_redirect_url_parameter")  
-  p.hint If your OAuth redirect uri parameter is NOT 'redirect_uri' then you can specify it here
-  label Send parameters in query string
-  input.form-control.auth-item(type="checkbox"     
-    checked=dictionary.auth_options.oauth_params_in_query==true
-    data-provider="github" data-prop="auth_options.oauth_params_in_query")
-  p.hint Check this if your OAuth provider requires parameters to be sent in the query string instead of the body
+h4 Advanced
+label Redirect Uri Parameter
+input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_redirect_url_parameter || ''}" data-provider="github" data-prop="auth_options.oauth_redirect_url_parameter")  
+p.hint If your OAuth redirect uri parameter is NOT 'redirect_uri' then you can specify it here
+label Send parameters in query string
+input.form-control.auth-item(type="checkbox"     
+  checked=dictionary.auth_options.oauth_params_in_query==true
+  data-provider="github" data-prop="auth_options.oauth_params_in_query")
+p.hint Check this if your OAuth provider requires parameters to be sent in the query string instead of the body

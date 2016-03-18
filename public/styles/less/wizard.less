@@ -11,13 +11,18 @@
       color: @accent;
     }
     &.active{
-      color: @primary;
-      a{
-        color: @primary;
+      background-color: @primary;
+      color: white;
+      &:hover{
+        -ms-transform: scale(1); /* IE 9 */
+        -webkit-transform: scale(1); /* Chrome, Safari, Opera */
+        transform: scale(1);
       }
     }
     &:hover{
-      box-shadow: 0px 0px 5px @accent;
+      -ms-transform: scale(1.1); /* IE 9 */
+      -webkit-transform: scale(1.1); /* Chrome, Safari, Opera */
+      transform: scale(1.1);
     }
   }
 }
@@ -49,17 +54,23 @@
   .auth-method, .paging-method{
     height: 110px;
     cursor: pointer;
+    background-color: white;
     .auth-type, .paging-type{
       text-align: center;
     }
     .auth-desc, .paging-desc{
       font-size: 12px;
     }
+    &.active{
+      border: 2px solid @accent;
+      box-shadow: 0px 0px 5px @accent;
+    }
   }
   .save-successful{
     color: @green;
   }
   .table-card, .field-card{
+    background-color: white;
     position: relative;
     h3{
       margin-top: 5px;
@@ -90,6 +101,27 @@
       color: @fog;
       font-size: 14px;
     }
+  }
+
+  .btn-file {
+    display: inline-block !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-file input[type=file] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 100%;
+      min-height: 100%;
+      font-size: 100px;
+      text-align: right;
+      filter: alpha(opacity=0);
+      opacity: 0;
+      outline: none;
+      background: white;
+      cursor: inherit;
+      display: block;
   }
 }
 

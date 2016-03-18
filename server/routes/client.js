@@ -36,7 +36,7 @@ router.get('/dashboard', Auth.isLoggedIn, function(req, res, next){
     }
   });
 });
-router.get('/public', function(req, res, next){
+router.get('/public', Auth.isLoggedIn, function(req, res, next){
   //reset the current session variables
   Dictionary.get({public: true}, function(err, response){
     if(err){
@@ -73,8 +73,8 @@ router.get('/general/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSe
     res.render('wizard/general.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'general', icon: req.session.icon, defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
   }
 });
-router.get('/summary/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionaryAnon, function(req, res, next){
-    res.render('summary.jade', {dictionary: req.session.dictionary, info: req.session.info, icon: req.session.icon, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
+router.get('/summary/:id', Auth.isLoggedIn, MongoHelper.getInfoAnon, GitHelper.setSessionDictionaryAnon, function(req, res, next){
+    res.render('summary.jade', {user: req.user, dictionary: req.session.dictionary, dictionary: req.session.dictionary, info: req.session.info, icon: req.session.icon, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 router.get('/authentication/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});

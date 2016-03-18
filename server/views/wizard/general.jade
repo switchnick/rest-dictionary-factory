@@ -1,30 +1,34 @@
 include ../header.jade
 include ./navigation.jade
 include ../errorbanner.jade
-.container.wizard.general  
-  h2 How do you do?
-  .row
-    .col-md-8
-      label Display name
-      input.form-control(value="#{info.display_name}" data-provider="mongo" data-prop="display_name")
-      p.hint This will make the name look better
-      label Endpoint
-      input.form-control(placeholder="We'll REST here a while" value="#{dictionary.base_endpoint  || ''}" data-provider="github" data-prop="base_endpoint") 
-      p.hint For example, in the twitter api call "https://api.twitter.com/1.1/search" -  
-        strong 1.1 
-        | would be the endpoint
-      label Data Object
-      input.form-control(placeholder="Where's the data at?" value="#{dictionary.data_element  || ''}" data-provider="github" data-prop="data_element")
-      p.hint In a lot of cases this is normally 
-        strong data      
-      br      
-    .col-md-4
-      label Icon
-      .icon
-        img(src="#{icon}")   
-      br
-      //form(id="iconForm" name="uploader", action="/api/iconupload/#{info._id}", method="post", enctype="multipart/form-data")
-      span.btn.btn-default.btn-file Choose
-        input(type="file", name="file", id="file" data-id="#{info._id}")     
-      //button.secondary-button.change-icon Change 
+.container.wizard.general    
+  .card
+    h2 How do you do?
+    .row
+      .col-md-8
+        label Display name
+        input.form-control(value="#{info.display_name}" data-provider="mongo" data-prop="display_name")
+        p.hint This will make the name look better
+        label Endpoint
+        input.form-control(placeholder="We'll REST here a while" value="#{dictionary.base_endpoint  || ''}" data-provider="github" data-prop="base_endpoint") 
+        p.hint For example, in the twitter api call "https://api.twitter.com/1.1/search" -  
+          strong 1.1 
+          | would be the endpoint. Where applicable this can be used to build version specific dictionaries.
+        label Data Object
+        input.form-control(placeholder="Where's the data at?" value="#{dictionary.data_element  || ''}" data-provider="github" data-prop="data_element")
+        p.hint In a lot of cases this is normally 
+          strong data   
+          |. You can also specify child objects like 
+          strong response.data 
+          | or you can leave it blank if your data is at the root of the response.
+        br      
+      .col-md-4.center
+        label Icon
+        .icon
+          img(src="#{icon}")   
+        br
+        //form(id="iconForm" name="uploader", action="/api/iconupload/#{info._id}", method="post", enctype="multipart/form-data")
+        span.btn.btn-default.btn-file.primary-button.center Choose
+          input(type="file", name="file", id="file" data-id="#{info._id}")     
+        //button.secondary-button.change-icon Change 
 include ../footer.jade

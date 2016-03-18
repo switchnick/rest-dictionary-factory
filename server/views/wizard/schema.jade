@@ -3,51 +3,52 @@ include ./navigation.jade
 include ../errorbanner.jade
 include ../autodetect-auth.jade
 .container.wizard.general  
-  h2 How do I look?
-  .row
-    .col-md-3
-      h3 Tables
-      form(action="/api/newtable/#{info._id}" method="post")
-        button.secondary-button(type="submit") Add Table 
-        .spacer
-        each table, index in dictionary.tables
-          div(class="table-card" class="card" class=tableIndex==index?'active':'' data-item="table" data-id="#{info._id}" data-index='#{index}')
-            h3 #{table.qName}
-            span.sub-title /#{table.endpoint || ''}   
-            .delete-button
-    if dictionary.tables.length > 0
-      .col-md-4
-        h3 Basic Table Info
-        label Table name
-        input.form-control(value="#{dictionary.tables[tableIndex].qName || ''}" data-provider="github" data-prop="tables.#{tableIndex}.qName")
-        label Endpoint
-        input.form-control(value="#{dictionary.tables[tableIndex].endpoint || ''}" data-provider="github" data-prop="tables.#{tableIndex}.endpoint")
-        p.hint This is the URL Endpoint where the data exists
-        h3 Advanced      
-        | Coming Soon
-      .col-md-5
-        if dictionary.tables[tableIndex].fields
-          h3 Fields #{'('+dictionary.tables[tableIndex].fields.length+')' || ''}
-        else
-          h3 Fields
-        a(href="/api/autodetectcheck/#{info._id}").inline.primary-button.auto-detect Auto Detect
-        a(href="/api/addfield/#{info._id}/#{tableIndex}").inline.secondary-button Add Field
-        .spacer
-        if dictionary.tables[tableIndex].fields
-          each field, index in dictionary.tables[tableIndex].fields
-            .field-card.card(data-item="field" data-id="#{info._id}" data-parent-index='#{tableIndex}' data-index='#{index}')
-              h3                          
-                input.field-prop(value="#{field.qName}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.qName")
-              .sub-title              
-                input.field-prop(value="#{field.path}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.path")              
-              .field-type
-                select.form-control(value="#{field.type}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.type")              
-                  each val in defaults.sense_data_types
-                    option(selected=field.type==val.name) #{val.name}
+  .card
+    h2 How do I look?
+    .row
+      .col-md-3
+        h3 Tables
+        form(action="/api/newtable/#{info._id}" method="post")
+          button.secondary-button(type="submit") Add Table 
+          .spacer
+          each table, index in dictionary.tables
+            div(class="table-card" class="card" class=tableIndex==index?'active':'' data-item="table" data-id="#{info._id}" data-index='#{index}')
+              h3 #{table.qName}
+              span.sub-title /#{table.endpoint || ''}   
               .delete-button
-        else
-          h3 No fields
-    else
-      col-md-9
-        h3 No Tables      
+      if dictionary.tables.length > 0
+        .col-md-4
+          h3 Basic Table Info
+          label Table name
+          input.form-control(value="#{dictionary.tables[tableIndex].qName || ''}" data-provider="github" data-prop="tables.#{tableIndex}.qName")
+          label Endpoint
+          input.form-control(value="#{dictionary.tables[tableIndex].endpoint || ''}" data-provider="github" data-prop="tables.#{tableIndex}.endpoint")
+          p.hint This is the URL Endpoint where the data exists
+          h3 Advanced      
+          | Coming Soon
+        .col-md-5
+          if dictionary.tables[tableIndex].fields
+            h3 Fields #{'('+dictionary.tables[tableIndex].fields.length+')' || ''}
+          else
+            h3 Fields
+          a(href="/api/autodetectcheck/#{info._id}").inline.primary-button.auto-detect Auto Detect
+          a(href="/api/addfield/#{info._id}/#{tableIndex}").inline.secondary-button Add Field
+          .spacer
+          if dictionary.tables[tableIndex].fields
+            each field, index in dictionary.tables[tableIndex].fields
+              .field-card.card(data-item="field" data-id="#{info._id}" data-parent-index='#{tableIndex}' data-index='#{index}')
+                h3                          
+                  input.field-prop(value="#{field.qName}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.qName")
+                .sub-title              
+                  input.field-prop(value="#{field.path}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.path")              
+                .field-type
+                  select.form-control(value="#{field.type}" data-provider="github" data-prop="tables.#{tableIndex}.fields.#{index}.type")              
+                    each val in defaults.sense_data_types
+                      option(selected=field.type==val.name) #{val.name}
+                .delete-button
+          else
+            h3 No fields
+      else
+        col-md-9
+          h3 No Tables      
 include ../footer.jade
