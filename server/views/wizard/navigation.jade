@@ -1,19 +1,24 @@
 div.container.navigation
   .row.dictionary-nav
     .col-md-2
-      div(class='nav-button' class='card' class=page=='general'?'active':'')
-        a(href="/general/#{info._id}") General  
+      a(href="/general/#{info._id}")
+        div(class='nav-button' class='card' class=page=='general'?'active':'')
+          | General  
     .col-md-2
-      div(class='nav-button' class='card' class=page=='auth'?'active':'')
-        a(href="/authentication/#{info._id}") Authentication
+      a(href="/authentication/#{info._id}")
+        div(class='nav-button' class='card' class=page=='auth'?'active':'')
+          | Authentication
     .col-md-2
-      div(class='nav-button' class='card' class=page=='paging'?'active':'')
-        a(href="/paging/#{info._id}") Paging
+      a(href="/paging/#{info._id}")
+        div(class='nav-button' class='card' class=page=='paging'?'active':'')
+          | Paging
     .col-md-2
-      div(class='nav-button' class='card' class=page=='schema'?'active':'')
-        a(href="/schema/#{info._id}?table=0") Schema
+      a(href="/schema/#{info._id}?table=0")
+        div(class='nav-button' class='card' class=page=='schema'?'active':'')
+          | Schema
   .row
     .col-md-12
+      .vertical-spacer
       .spacer
       .float-left
         h1.float-left #{info.display_name}        
@@ -28,3 +33,4 @@ div.container.navigation
         p.hint.publish-description Clicking 'Publish' will make your dictionary available in the 'Public Dictionaries'. Until then only you can see it (except for in GitHub).
         p.save-successful(style='display:none;') Changes successfully save and committed
         p.hint.save-description Clicking 'Save' will commit the changes. Until then they will only be stored against the current session.
+  .vertical-spacer
