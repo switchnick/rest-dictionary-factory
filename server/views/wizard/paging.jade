@@ -15,13 +15,13 @@ include ../errorbanner.jade
   .vertical-spacer
   .card
     .row
-      .col-md-12              
+      .col-md-12                      
         case dictionary.paging_method
           when "Pages"
             include ./paging/pages.jade
           when "Offset/Limit"
             include ./paging/offset_limit.jade
-          when "Supplied Url"
+          when "Supplied URL"
             include ./paging/url.jade
           default
             include ./paging/none.jade    

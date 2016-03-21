@@ -249,6 +249,14 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
               data = data[dataElement[i]];
             }
             var childUrl = data[0][urlProp];
+            var linkToParent;
+            if(data[0].id){
+              linkToParent = {
+                qName: "parentId",
+                type: "String",
+                path: "{parent}.id"
+              };
+            }            
             console.log("Child url is "+childUrl);
             requestParams.url = childUrl;
             Request(requestParams, function(error, response, childcontent){
@@ -272,7 +280,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
                   else{
                     req.flash('error', "No data found at specified child element");
                   }
-                  var fields = getSchema(childdata);
+                  var fields = getSchema(childdata, linkToParent);
                 }
                 else{
                   req.flash('error', body);
@@ -502,10 +510,13 @@ router.get('/save/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessi
   });
 });
 
-function getSchema(data){
+function getSchema(data, linkToParent){
   console.log("Figuring out schema");
   console.log(data);
   var fields = [];
+  if(linkToParent){
+    fields.push(linkToParent);
+  }
   for (var key in data){
     if(key!="__v"){
       var fieldData = data[key];
