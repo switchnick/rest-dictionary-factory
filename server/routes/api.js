@@ -61,7 +61,6 @@ router.post('/updatesessiondictionary/:id', Auth.isLoggedIn, MongoHelper.getInfo
         }
       }
     }
-    console.log(dicProp);
     res.json({});
   }
   catch(err){
@@ -238,47 +237,78 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
     else{
       try{
         var data = JSON.parse(body);
-        if(req.session.dictionary.data_element && req.session.dictionary.data_element != ''){
-          var dataElement = req.session.dictionary.data_element.split(".");
-          for (var i=0;i<dataElement.length;i++){
-            data = data[dataElement[i]];
-          }          
-        }
-        console.log("Auto Detect Result");
-        console.log(data);
-        var fields = [];
-        if(data && data.length>0){
-          for (var key in data[0]){
-            if(key!="__v"){
-              var fieldData = data[0][key];
-              if(fieldData !== null && typeof fieldData === 'object'){
-                //then we have child properties
-                for (var child in fieldData){
-                  if(child!="__v" && child!="0"){
-                    var field = {};
-                    field.qName = key+"_"+child;
-                    field.path = key+"."+child;
-                    field.type = "String";
-                    fields.push(field);
-                  }
-                }
+        if(req.session.dictionary.tables[req.session.temp.table].has_link_to_child && req.session.dictionary.tables[req.session.temp.table].has_link_to_child==true){
+          var dataElement = req.session.dictionary.tables[req.session.temp.table].data_element_override.split(".");
+          if(!dataElement){
+            req.flash('error', "Please specify a Data Element Override");
+          }
+          else{
+            console.log("Fetching child");
+            var urlProp = dataElement.pop();
+            for (var i=0;i<dataElement.length;i++){
+              data = data[dataElement[i]];
+            }
+            var childUrl = data[0][urlProp];
+            console.log("Child url is "+childUrl);
+            requestParams.url = childUrl;
+            Request(requestParams, function(error, response, childcontent){
+              if(error){
+                console.log(error);
+                res.flash('error', error);
               }
               else{
-                var field = {};
-                field.qName = key;
-                field.path = key;
-                field.type = "String";
-                fields.push(field);
+                var childdata = JSON.parse(childcontent);
+                if(req.session.dictionary.tables[req.session.temp.table].child_data_element && req.session.dictionary.tables[req.session.temp.table].child_data_element != ''){
+                  var childDataElement = req.session.dictionary.tables[req.session.temp.table].child_data_element.split(".");
+                  for (var i=0;i<childDataElement.length;i++){
+                    childdata = childdata[childDataElement[i]];
+                  }
+                }
+                var fields = [];
+                if(childdata){
+                  if(childdata.length && childdata.length>0){
+                    childdata = childdata[0];
+                  }
+                  else{
+                    req.flash('error', "No data found at specified child element");
+                  }
+                  var fields = getSchema(childdata);
+                }
+                else{
+                  req.flash('error', body);
+                }
+                req.session.dictionary.tables[req.session.temp.table].fields = fields;
+                res.redirect('/schema/'+req.params.id+'?table='+req.session.temp.table);
               }
-
-            }
+            });
           }
         }
         else{
-          req.flash('error', body);
+          if(req.session.dictionary.data_element && req.session.dictionary.data_element != ''){
+            var dataElement = req.session.dictionary.data_element.split(".");
+            for (var i=0;i<dataElement.length;i++){
+              data = data[dataElement[i]];
+            }
+          }
+          if(req.session.dictionary.tables[req.session.temp.table].data_element_override && req.session.dictionary.tables[req.session.temp.table].data_element_override != ''){
+            var dataElement = req.session.dictionary.tables[req.session.temp.table].data_element_override.split(".");
+            for (var i=0;i<dataElement.length;i++){
+              data = data[dataElement[i]];
+            }
+          }
+          var fields = [];
+          if(data){
+            if(data.length>0){
+              data = data[0];
+            }
+            var fields = getSchema(data);
+          }
+          else{
+            req.flash('error', body);
+          }
+          req.session.dictionary.tables[req.session.temp.table].fields = fields;
+          res.redirect('/schema/'+req.params.id+'?table='+req.session.temp.table);
         }
-        req.session.dictionary.tables[req.session.temp.table].fields = fields;
-        res.redirect('/schema/'+req.params.id+'?table='+req.session.temp.table);
       }
       catch(err){
         console.log(err);
@@ -471,6 +501,41 @@ router.get('/save/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessi
     }
   });
 });
+
+function getSchema(data){
+  console.log("Figuring out schema");
+  console.log(data);
+  var fields = [];
+  for (var key in data){
+    if(key!="__v"){
+      var fieldData = data[key];
+      if(fieldData !== null && typeof fieldData === 'object'){
+        //then we have child properties
+        if(!fieldData.length){
+          for (var child in fieldData){
+            if(child!="__v" && child!="0"){
+              var field = {};
+              field.qName = key+"_"+child;
+              field.path = key+"."+child;
+              field.type = "String";
+              fields.push(field);
+            }
+          }
+        }
+      }
+      else{
+        var field = {};
+        field.qName = key;
+        field.path = key;
+        field.type = "String";
+        fields.push(field);
+      }
+    }
+  }
+  console.log("detected");
+  console.log(fields);
+  return fields;
+}
 
 var randomString = function(length) {
     var text = "";

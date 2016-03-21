@@ -94,8 +94,7 @@ router.use('/oauth', function(req, res){
   }
 });
 
-function getTokens(data){
-  console.log(data);
+function getTokens(data){  
   var output = {};
   output = traverseProperties(data, output);
   return output;
