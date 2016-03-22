@@ -10,7 +10,10 @@ input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_
 p.hint The Url that can be used to exchange a given code for an Access Token. More information on OAuth 2.0 can be found 
   a(href="") here
 br
-a(href="/api/saveoauthpopup/#{info._id}").inline.primary-button Store OAuth Credentials
+if info.saved_credentials===true
+  a(href="/api/removeoauthcreds/#{info._id}").inline.primary-button Remove OAuth Credentials
+else
+  a(href="/api/saveoauthpopup/#{info._id}").inline.primary-button Store OAuth Credentials  
 p.hint To simplify the authentication process for end users you can store your Client Id and Client Secret against the dictionary. These details will 
   strong NOT 
   | be available publicly and will 
@@ -22,6 +25,7 @@ label Redirect Uri Parameter
 input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_redirect_url_parameter || ''}" data-provider="github" data-prop="auth_options.oauth_redirect_url_parameter")  
 p.hint If your OAuth redirect uri parameter is NOT 'redirect_uri' then you can specify it here
 label Send parameters in query string
+br
 input.form-control.auth-item(type="checkbox"     
   checked=dictionary.auth_options.oauth_params_in_query==true
   data-provider="github" data-prop="auth_options.oauth_params_in_query")
