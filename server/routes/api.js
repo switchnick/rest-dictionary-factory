@@ -446,7 +446,7 @@ router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.set
 
 router.get('/public', function(req, res){
   console.log('getting public');
-  Dictionary.get({}, function(err, result){
+  Dictionary.get({public:true}, function(err, result){
     if(err){
       console.log(err);
       res.send({err:err});
