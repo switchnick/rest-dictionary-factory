@@ -77,7 +77,8 @@ router.get('/summary/:id', Auth.isLoggedIn, MongoHelper.getInfoAnon, GitHelper.s
     res.render('summary.jade', {user: req.user, dictionary: req.session.dictionary, dictionary: req.session.dictionary, info: req.session.info, icon: req.session.icon, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
 });
 router.get('/authentication/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
-  res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});
+  var storeoauth = (req.query.storeoauth && req.query.storeoauth == "true");
+  res.render('wizard/authentication.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'auth', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail'), storeoauth:storeoauth});
 });
 router.get('/paging/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   res.render('wizard/paging.jade', {user: req.user, dictionary: req.session.dictionary, info: req.session.info, page:'paging', defaults: Defaults, error: req.flash('error'), errorDetail:req.flash('errorDetail')});

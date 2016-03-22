@@ -1,4 +1,5 @@
 var Dictionary = require('../controllers/dictionaries'),
+    OAuthCreds = require('../models/oauth-creds'),
     Error = require('../controllers/error');
 
 module.exports = {
@@ -49,5 +50,11 @@ module.exports = {
         next();
       }
     }
+  },
+  getStoredOAuthCreds: function(dictionaryId){
+
+  },
+  storeOAuthCreds: function(dictionaryId, data){
+
   }
 }
