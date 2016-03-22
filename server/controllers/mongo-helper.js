@@ -50,11 +50,5 @@ module.exports = {
         next();
       }
     }
-  },
-  getStoredOAuthCreds: function(dictionaryId){
-
-  },
-  storeOAuthCreds: function(dictionaryId, data){
-
   }
 }

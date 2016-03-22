@@ -4,6 +4,7 @@ var express = require('express'),
     Auth = require('../controllers/auth'),
     Error = require('../controllers/error'),
     Dictionary = require('../controllers/dictionaries'),
+    OAuthCreds = require('../controllers/oauth-creds'),
     GitHelper = require('../controllers/git-helper'),
     Test = require('../controllers/test'),
     MongoHelper = require('../controllers/mongo-helper'),
@@ -151,8 +152,81 @@ router.get('/saveoauthpopup/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelpe
   res.redirect('/authentication/'+req.params.id+'?storeoauth=true');
 });
 
-router.post('/saveoauthcreds/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+router.get('/removeoauthcreds/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  //remove the credentials
+  OAuthCreds.getOne({dictionaryId: req.params.id}, function(err, result){
+    if(err){
+      req.flash('error', err);
+      res.redirect('/authentication/'+req.params.id);
+    }
+    else {
+      if(result){
+        OAuthCreds.delete({_id:result._id}, function(err, result){
+          if(err){
+            req.flash('error', err.message);
+            res.redirect('/authentication/'+req.params.id);
+          }
+          else{
+            req.session.info.saved_credentials = false;
+            Dictionary.update(req.params.id, req.session.info, function(err){
+              if(err){
+                req.flash('error', err.message);
+              }
+              res.redirect('/authentication/'+req.params.id);
+            });
+          }
+        });
+      }
+    }
+  });
+});
 
+router.post('/saveoauthcreds/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  //save the credentials
+  var data = req.body;
+  data.dictionaryId = req.params.id;
+  OAuthCreds.getOne({dictionaryId: req.params.id}, function(err, result){
+    if(err){
+      req.flash('error', err);
+      res.redirect('/authentication/'+req.params.id);
+    }
+    else {
+      if(result){
+        OAuthCreds.update(result._id, data, function(err, result){
+          if(err){
+            req.flash('error', err);
+            res.redirect('/authentication/'+req.params.id);
+          }
+          else{
+            req.session.info.saved_credentials = true;
+            Dictionary.update(req.params.id, req.session.info, function(err){
+              if(err){
+                res.json({err: err});
+              }
+              res.redirect('/authentication/'+req.params.id);
+            });
+          }
+        });
+      }
+      else{
+        OAuthCreds.create(data, function(err, result){
+          if(err){
+            req.flash('error', err);
+            res.redirect('/authentication/'+req.params.id);
+          }
+          else{
+            req.session.info.saved_credentials = true;
+            Dictionary.update(req.params.id, req.session.info, function(err){
+              if(err){
+                res.json({err: err});
+              }
+              res.redirect('/authentication/'+req.params.id);
+            });
+          }
+        });
+      }
+    }
+  });
 });
 
 router.get('/autodetectcheck/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
@@ -366,13 +440,13 @@ router.get('/oauth1_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessio
 
 //router.get('/oauth2_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionary, function(req, res, next){
 router.get('/oauth2_authorize/:id', function(req, res, next){
-  if(!req.params.id || !req.query.clientid){
+  if(!req.params.id){
     //handle the issue
-    req.flash('error', 'Missing information. Please check that a valid dictionary id and client id have been provided.');
+    req.flash('error', 'Missing information. Please check that a valid dictionary id has been provided.');
     res.redirect('error.jade');
   }
   else{
-    req.body.username = req.query.clientid;
+    req.body.username = req.query.clientid || randomString(12);
     req.body.password = "anonymous";
     passport.authenticate('anonymous', function(err, user){
       if(err){
@@ -391,8 +465,34 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
                 if(!req.session.temp){
                   req.session.temp = {};
                 }
-                req.session.temp.client_id = req.query.clientid;
-                res.render('oauth2-authorize.jade', {clientId: req.query.clientid, info: req.session.info});
+                if(!req.query.clientid){
+                  //then hopefully we have a dictionary that uses saved credentials
+                  if(req.session.info.saved_credentials && req.session.info.saved_credentials===true){
+                    OAuthCreds.getOne({dictionaryId: req.params.id}, function(err, result){
+                      if(err){
+                        req.flash('error', err.message);
+                        res.redirect('error.jade');
+                      }
+                      else{
+                        req.session.temp.client_id = result.client_id;
+                        req.session.temp.client_secret = result.client_secret;
+                        var oauth_redirect_url_parameter = "redirect_uri";
+                        if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
+                           oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
+                        }
+                        res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
+                      }
+                    });
+                  }
+                  else{
+                    req.flash('error', 'Missing information. Please check that a valid Client Id has been provided.');
+                    res.redirect('error.jade');
+                  }
+                }
+                else{
+                  req.session.temp.client_id = req.query.clientid;
+                  res.render('oauth2-authorize.jade', {clientId: req.query.clientid, info: req.session.info});
+                }
               });
             });
           }
