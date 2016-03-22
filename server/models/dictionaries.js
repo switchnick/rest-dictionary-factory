@@ -8,7 +8,8 @@ var schema = new Schema({
   dictionary: String,
   dictionary_url: String,
   icon: String,
-  public: Boolean
+  public: Boolean,
+  saved_credentials: Boolean
 });
 
 module.exports = mongoose.model('dictionaries', schema)

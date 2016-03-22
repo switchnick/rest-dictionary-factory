@@ -1,0 +1,12 @@
+.autodetect-auth-container.smokescreen(class=storeoauth&&storeoauth==true?'show':'hide')
+  .autodetect-auth.card
+    form(action="/api/saveoauthcreds/#{info._id}" method="post")
+      h3 Store OAuth Credentials
+      if dictionary.auth_options.auth_version=="1.0"
+        include ./storecreds/oauth1.jade
+      else          
+        include ./storecreds/oauth2.jade          
+      .vertical-spacer
+      .center
+        button.inline.primary-button.autodetect-auth-ok(type="submit") OK
+        button.inline.primary-button.autodetect-auth-cancel(type="button") Cancel

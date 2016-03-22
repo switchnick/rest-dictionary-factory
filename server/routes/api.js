@@ -147,6 +147,14 @@ router.post('/iconupload/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.s
     });
 });
 
+router.get('/saveoauthpopup/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+  res.redirect('/authentication/'+req.params.id+'?storeoauth=true');
+});
+
+router.post('/saveoauthcreds/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
+
+});
+
 router.get('/autodetectcheck/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
   //checking goes here
   var authMethod = req.session.dictionary.auth_method.toLowerCase().replace(/\s/g, "_");
@@ -256,7 +264,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
                 type: "String",
                 path: "{parent}.id"
               };
-            }            
+            }
             console.log("Child url is "+childUrl);
             requestParams.url = childUrl;
             Request(requestParams, function(error, response, childcontent){

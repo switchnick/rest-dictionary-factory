@@ -24,7 +24,6 @@ catch(err){
   //config file doesn't exist
   console.log("No configuration file found. Not an issue if we're deploying on heroku");
 }
-console.log(process.env);
 
 mongoose.connect(process.env.mongo);
 
@@ -48,6 +47,7 @@ app.use(bodyParser.urlencoded({limit: '10mb'}));
 
 //load the models
 require('./server/models/dictionaries.js');
+require('./server/models/oauth-creds.js');
 
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/styles', express.static(__dirname + '/public/styles/css'));
