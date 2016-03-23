@@ -33,22 +33,17 @@ module.exports = {
       res.redirect('/');
     }
     else{
-      if(!req.session.info){
-        Dictionary.getOne({_id: req.params.id}, function(err, response){
-          if(!response){
-            req.flash('error', Error.notYours());
-            res.redirect('/');
-          }
-          else{
-            req.session.info = response;
-            req.session.temp = {};
-            next();
-          }
-        });
-      }
-      else{
-        next();
-      }
+      Dictionary.getOne({_id: req.params.id}, function(err, response){
+        if(!response){
+          req.flash('error', Error.notYours());
+          res.redirect('/');
+        }
+        else{
+          req.session.info = response;
+          req.session.temp = {};
+          next();
+        }
+      });      
     }
   }
 }
