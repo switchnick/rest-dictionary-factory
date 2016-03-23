@@ -79,15 +79,13 @@ router.use('/oauth', function(req, res){
         if(err){
           console.log(err);
         }
-        else{          
+        else{
           var responseData;
-          try{
-            responseData = qs.parse(body);
-          }
-          catch(ex){
-            console.log("error:");
-            console.log(ex);
+          if(body.indexOf("{")!=-1){
             responseData = JSON.parse(body);
+          }
+          else{
+            responseData = qs.parse(body);
           }
           console.log(responseData);
           var tokenData = getTokens(responseData);
