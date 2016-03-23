@@ -79,9 +79,17 @@ router.use('/oauth', function(req, res){
         if(err){
           console.log(err);
         }
-        else{
-          //var responseData = qs.parse(body);
-          var responseData = JSON.parse(body);
+        else{          
+          var responseData;
+          try{
+            responseData = qs.parse(body);
+          }
+          catch(ex){
+            console.log("error:");
+            console.log(ex);
+            responseData = JSON.parse(body);
+          }
+          console.log(responseData);
           var tokenData = getTokens(responseData);
           console.log(tokenData);
           res.render('token.jade', {token: tokenData.access_token});
@@ -94,7 +102,7 @@ router.use('/oauth', function(req, res){
   }
 });
 
-function getTokens(data){  
+function getTokens(data){
   var output = {};
   output = traverseProperties(data, output);
   return output;

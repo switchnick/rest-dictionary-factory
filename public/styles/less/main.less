@@ -2,9 +2,10 @@
 @import "fonts.less";
 
 .body{
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: Stellar;
+  font-family: Stellar, "QlikView Sans", sans-serif;
   font-size: 16px;
   color: @default-text;
   background-color: white;
@@ -48,6 +49,7 @@
     border-radius: 3px;
     font-weight: normal;
     border: none;
+    box-sizing: border-box;
   }
 
   .primary-button{
@@ -62,7 +64,7 @@
     margin-bottom: 3px;
   }
 
-  .download-button, .delete-button{
+  .download-button, .delete-button, .back-button{
     display: block;
     cursor: pointer;
     background-color: transparent;
@@ -82,7 +84,7 @@
 
   .download-button{
     &:after{
-      content: "\E801";
+      content: "\E803";
     }
     &:hover{
       color: @green;
@@ -91,11 +93,23 @@
 
   .delete-button{
     &:after{
-      content: "\E800";
+      content: "\E802";
     }
     &:hover{
       color: @red;
     }
+  }
+
+  .back-button{
+    position: relative;
+    color: @accent;
+    width: auto !important;
+    &:after{
+      font-family: factory;
+      content: "\E800";
+    }
+    padding-left: 45px;
+    font-size: 20px;
   }
 
   .title{
