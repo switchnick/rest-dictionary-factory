@@ -45,7 +45,7 @@ router.use('/oauth', function(req, res){
         verifier: data.oauth_verifier
       };
       request.post({url:tokenUrl, oauth:oauthparams}, function(err, response, body){
-
+        req.logout();
         var tokenData = qs.parse(body);
         res.render('token.jade', {token: tokenData.oauth_token, tokenSecret: tokenData.oauth_token_secret});
       });
@@ -95,14 +95,14 @@ router.use('/oauth', function(req, res){
           console.log(responseData);
           var tokenData = getTokens(responseData);
           console.log(tokenData);
-
+          req.logout();
           res.render('token.jade', {token: tokenData.access_token});
         }
       });
     }
   }
   else{
-    
+    req.logout();
     res.render('token.jade', {tokenInfo: req.body});
   }
 });
