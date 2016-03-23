@@ -44,25 +44,20 @@ module.exports = {
     }
   },
   setSessionDictionaryAnon: function(req, res, next){
-    if(!req.session.dictionary || req.session.curr_dictionary != req.params.id){
-      GitHub.repos.getContent({user: req.session.info.owner, repo: req.session.info.name, path: req.session.info.dictionary}, function(err, content){
-        if(err){
-          console.log('error getting content');
-          console.log(err);
-          req.flash('error', err.message);
-          res.redirect('/error');
-        }
-        else{
-          req.session.dictionary = JSON.parse(atob(content.content));
-          req.session.curr_dictionary = req.params.id;
-          req.session.sha = content.sha;
-          next();
-        }
-      });
-    }
-    else{
-      next();
-    }
+    GitHub.repos.getContent({user: req.session.info.owner, repo: req.session.info.name, path: req.session.info.dictionary}, function(err, content){
+      if(err){
+        console.log('error getting content');
+        console.log(err);
+        req.flash('error', err.message);
+        res.redirect('/error');
+      }
+      else{
+        req.session.dictionary = JSON.parse(atob(content.content));
+        req.session.curr_dictionary = req.params.id;
+        req.session.sha = content.sha;
+        next();
+      }
+    });    
   },
   checkForRepo: function(req, res, repo, owner, callbackFn){
     console.log('looking for '+owner+"/"+repo);

@@ -411,30 +411,56 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
 
 });
 
-router.get('/oauth1_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionary, function(req, res, next){
+//router.get('/oauth1_authorize/:id', MongoHelper.getInfoAnon, GitHelper.setSessionDictionary, function(req, res, next){
+router.get('/oauth1_authorize/:id', function(req, res, next){
   if(!req.params.id || !req.query.consumer_key || !req.query.consumer_secret){
     //handle the issue
     req.flash('error', 'Missing information. Please check that a valid dictionary id, consumer key and consumer secret have been provided.');
     res.redirect('error.jade');
   }
   else{
-    if(!req.session.temp){
-      req.session.temp = {};
+    if(req.session && req.session.dictionary){
+      console.log("we have a dictionary");
     }
-    req.session.temp.consumer_key = req.query.consumer_key;
-    req.session.temp.consumer_secret = req.query.consumer_secret;
-    var oauthparams = {
-      callback: process.env.oauth_redirect_uri,
-      consumer_key: req.session.temp.consumer_key,
-      consumer_secret: req.session.temp.consumer_secret
-    };
-    var url = req.session.dictionary.auth_options.oauth_request_url;
-    Request.post({url:url, oauth:oauthparams}, function(err, response, body){
-      var reqData = qs.parse(body);
-      var authUrl = req.session.dictionary.auth_options.oauth_authorize_url;
-      authUrl += "?" + qs.stringify({oauth_token: reqData.oauth_token});
-      res.redirect(authUrl);
-    });
+    req.body.username = req.query.consumer_key || randomString(12);
+    req.body.password = "anonymous";
+    passport.authenticate('anonymous', function(err, user){
+      if(err){
+        req.flash('error', err);
+        res.redirect('error.jade');
+      }
+      else{
+        req.logIn(user, function(err){
+          if(err){
+            req.flash('error', err);
+            res.redirect('error.jade');
+          }
+          else{
+            MongoHelper.getInfoAnon(req, res, function(){
+              GitHelper.setSessionDictionaryAnon(req, res, function(){
+                if(!req.session.temp){
+                  req.session.temp = {};
+                }
+                req.session.temp.consumer_key = req.query.consumer_key;
+                req.session.temp.consumer_secret = req.query.consumer_secret;
+                var oauthparams = {
+                  callback: process.env.oauth_redirect_uri,
+                  consumer_key: req.session.temp.consumer_key,
+                  consumer_secret: req.session.temp.consumer_secret
+                };
+                var url = req.session.dictionary.auth_options.oauth_request_url;
+                Request.post({url:url, oauth:oauthparams}, function(err, response, body){
+                  var reqData = qs.parse(body);
+                  var authUrl = req.session.dictionary.auth_options.oauth_authorize_url;
+                  authUrl += "?" + qs.stringify({oauth_token: reqData.oauth_token});
+                  res.redirect(authUrl);
+                });
+              });
+            });
+          }
+        });
+      }
+    })(req, res, next);
   }
 });
 
@@ -446,6 +472,9 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
     res.redirect('error.jade');
   }
   else{
+    if(req.session && req.session.dictionary){
+      console.log("we have a dictionary");
+    }
     req.body.username = req.query.clientid || randomString(12);
     req.body.password = "anonymous";
     passport.authenticate('anonymous', function(err, user){
@@ -491,7 +520,9 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
                 }
                 else{
                   req.session.temp.client_id = req.query.clientid;
-                  res.render('oauth2-authorize.jade', {clientId: req.query.clientid, info: req.session.info});
+                  req.session.save(function(err){
+                    res.render('oauth2-authorize.jade', {clientId: req.query.clientid, info: req.session.info});
+                  });
                 }
               });
             });
@@ -504,20 +535,16 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
 
 router.use('/oauth2_authorize/:id/done',  Auth.isLoggedIn, MongoHelper.getInfoAnon, GitHelper.setSessionDictionaryAnon, function(req, res, next){
   if(req.body && req.body.client_secret){
-    if(!req.session.temp){
-      //we have bigger problems if this doesn't exist
-      req.session.temp = {};
-    }
     req.session.temp.client_secret = req.body.client_secret;
   }
-  req.session.save(function(err){
-    res.set('session', req.sessionID);
-    var oauth_redirect_url_parameter = "redirect_uri";
-    if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
-       oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
-    }
-    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
-  });
+  if(!req.session.temp.client_id){
+    req.session.temp = JSON.parse(req.sessionStore.sessions[req.sessionID]).temp; //this is a bit dirty
+  }
+  var oauth_redirect_url_parameter = "redirect_uri";
+  if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
+     oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
+  }
+  res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
 });
 
 router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
