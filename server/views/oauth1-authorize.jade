@@ -4,7 +4,8 @@ div.container.page
     h1 Authorize
     form(method="post" action="/api/oauth1_authorize")
       label Please enter the Consumer Secret for #{consumer_key}
-      input.form-control.auth-item(type='text' name='consumer_secret' value="")      
-      p.hint Please enter your consumer secret.
-      button.secondary-button(type="submit" target="_blank") Authorize    
+      .center
+        input.form-control.auth-item(type='text' name='consumer_secret' value="")      
+        p.hint Please enter your consumer secret.
+        button.secondary-button(type="submit" target="_blank") Authorize    
 include ./footer.jade

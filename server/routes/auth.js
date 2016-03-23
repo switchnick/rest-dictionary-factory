@@ -16,9 +16,13 @@ router.get('/github', passport.authenticate('github', { failureRedirect: '/login
 
 router.use('/oauth', function(req, res){
   var session;
+  var sessionRef;
   if(!req.session.dictionary){
     for(var s in req.sessionStore.sessions){
       if(JSON.parse(req.sessionStore.sessions[s]).dictionary){
+        sessionRef = s;
+        console.log("session ref");
+        console.log(sessionRef);
         session = JSON.parse(req.sessionStore.sessions[s]);
       }
     }
@@ -41,6 +45,10 @@ router.use('/oauth', function(req, res){
         verifier: data.oauth_verifier
       };
       request.post({url:tokenUrl, oauth:oauthparams}, function(err, response, body){
+        if(sessionRef){
+          console.log("deleting session");
+          delete req.sessionStore.sessions[sessionRef];
+        }
         var tokenData = qs.parse(body);
         res.render('token.jade', {token: tokenData.oauth_token, tokenSecret: tokenData.oauth_token_secret});
       });
@@ -90,12 +98,20 @@ router.use('/oauth', function(req, res){
           console.log(responseData);
           var tokenData = getTokens(responseData);
           console.log(tokenData);
+          if(sessionRef){
+            console.log("deleting session");
+            delete req.sessionStore.sessions[sessionRef];
+          }
           res.render('token.jade', {token: tokenData.access_token});
         }
       });
     }
   }
   else{
+    if(sessionRef){
+      console.log("deleting session");
+      delete req.sessionStore.sessions[sessionRef];
+    }
     res.render('token.jade', {tokenInfo: req.body});
   }
 });
