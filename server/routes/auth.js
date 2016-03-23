@@ -45,10 +45,7 @@ router.use('/oauth', function(req, res){
         verifier: data.oauth_verifier
       };
       request.post({url:tokenUrl, oauth:oauthparams}, function(err, response, body){
-        if(sessionRef){
-          console.log("deleting session");
-          delete req.sessionStore.sessions[sessionRef];
-        }
+
         var tokenData = qs.parse(body);
         res.render('token.jade', {token: tokenData.oauth_token, tokenSecret: tokenData.oauth_token_secret});
       });
@@ -98,20 +95,14 @@ router.use('/oauth', function(req, res){
           console.log(responseData);
           var tokenData = getTokens(responseData);
           console.log(tokenData);
-          if(sessionRef){
-            console.log("deleting session");
-            delete req.sessionStore.sessions[sessionRef];
-          }
+
           res.render('token.jade', {token: tokenData.access_token});
         }
       });
     }
   }
   else{
-    if(sessionRef){
-      console.log("deleting session");
-      delete req.sessionStore.sessions[sessionRef];
-    }
+    
     res.render('token.jade', {tokenInfo: req.body});
   }
 });
