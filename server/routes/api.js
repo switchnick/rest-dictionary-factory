@@ -422,7 +422,7 @@ router.get('/oauth1_authorize/:id', function(req, res, next){
     if(req.session && req.session.dictionary){
       console.log("we have a dictionary");
     }
-    req.body.username = req.query.consumer_key || randomString(12);
+    req.body.username = "anon_"+(req.query.consumer_key || randomString(12));
     req.body.password = "anonymous";
     passport.authenticate('anonymous', function(err, user){
       if(err){
@@ -475,7 +475,7 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
     if(req.session && req.session.dictionary){
       console.log("we have a dictionary");
     }
-    req.body.username = req.query.clientid || randomString(12);
+    req.body.username = "anon_"+(req.query.clientid || randomString(12));
     req.body.password = "anonymous";
     passport.authenticate('anonymous', function(err, user){
       if(err){
