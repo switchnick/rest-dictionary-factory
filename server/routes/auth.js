@@ -9,6 +9,11 @@ router.get('/login', passport.authenticate('github'), function(req, res){
 
 });
 
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 router.get('/github', passport.authenticate('github', { failureRedirect: '/login' }), function(req, res){
   req.session.token = req.user.token;
   res.redirect('/dashboard');
@@ -45,7 +50,9 @@ router.use('/oauth', function(req, res){
         verifier: data.oauth_verifier
       };
       request.post({url:tokenUrl, oauth:oauthparams}, function(err, response, body){
-        req.logout();
+        if(req.user.username.indexOf("anon_")!=-1){
+          req.logout();
+        }
         var tokenData = qs.parse(body);
         res.render('token.jade', {token: tokenData.oauth_token, tokenSecret: tokenData.oauth_token_secret});
       });
@@ -95,14 +102,18 @@ router.use('/oauth', function(req, res){
           console.log(responseData);
           var tokenData = getTokens(responseData);
           console.log(tokenData);
-          req.logout();
+          if(req.user.username.indexOf("anon_")!=-1){
+            req.logout();
+          }
           res.render('token.jade', {token: tokenData.access_token});
         }
       });
     }
   }
   else{
-    req.logout();
+    if(req.user.username.indexOf("anon_")!=-1){
+      req.logout();
+    }
     res.render('token.jade', {tokenInfo: req.body});
   }
 });
