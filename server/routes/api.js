@@ -300,6 +300,17 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
           token_secret: req.body.token_secret
         };
       }
+    case "API Key":
+      if(requestUrl.indexOf("?")==-1){
+        requestUrl+="?";
+      }
+      else{
+        requestUrl+="&";
+      }
+      requestUrl += req.session.dictionary.auth_options.api_key_parameter;
+      requestUrl += "=";
+      requestUrl += req.session.temp.api_key;
+      break;
     default:
 
   }
@@ -311,6 +322,8 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
   if(oauthparams){
     requestParams.oauth = oauthparams;
   }
+
+  console.log(requestUrl);
 
   Request(requestParams, function(error, response, body){
     if(error){
