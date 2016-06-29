@@ -268,12 +268,13 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
     "Content-Type": "application/json",
     "User-Agent": "rest-dictionary-factory"
   };
+  console.log("Auth method - "+ req.session.dictionary.auth_method);
   switch (req.session.dictionary.auth_method) {
     case "None":
 
       break;
     case "Basic":
-      console.log((req.body.username+":"+req.body.password).toString('base64'));
+      console.log("Basic auth header - "+(req.body.username+":"+req.body.password).toString('base64'));
       headers.Authorization = "Basic "+ (req.body.username+":"+req.body.password).toString('base64');
       break;
     case "OAuth":
