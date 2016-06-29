@@ -273,6 +273,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
 
       break;
     case "Basic":
+      console.log((req.body.username+":"+req.body.password).toString('base64'));
       headers.Authorization = "Basic "+ (req.body.username+":"+req.body.password).toString('base64');
       break;
     case "OAuth":
