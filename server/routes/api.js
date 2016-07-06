@@ -317,6 +317,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
 
   }
   var requestParams = {
+    rejectUnauthorized: false,
     url: requestUrl,
     headers: headers
   };
