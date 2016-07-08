@@ -392,24 +392,39 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
         else{
           if(req.session.dictionary.data_element && req.session.dictionary.data_element != ''){
             var dataElement = req.session.dictionary.data_element.split(".");
+            var targetData = data;
             for (var i=0;i<dataElement.length;i++){
-              data = data[dataElement[i]];
+              targetData = targetData[dataElement[i]];
             }
           }
           if(req.session.dictionary.tables[req.session.temp.table].data_element_override && req.session.dictionary.tables[req.session.temp.table].data_element_override != ''){
             var dataElement = req.session.dictionary.tables[req.session.temp.table].data_element_override.split(".");
+            var targetData = data;
             for (var i=0;i<dataElement.length;i++){
-              data = data[dataElement[i]];
+              targetData = targetData[dataElement[i]];
             }
+          }
+          if(!targetData){
+            targetData = data;
           }
           var fields = [];
-          if(data){
-            if(data.length>0){
-              data = data[0];
+          if(targetData){
+            if(targetData.length>0){
+              targetData = targetData[0];
+              if(req.session.dictionary.tables[req.session.temp.table].child_data_element && req.session.dictionary.tables[req.session.temp.table].child_data_element!=''){
+                var childDataElement = req.session.dictionary.tables[req.session.temp.table].child_data_element.split(".");
+                for (var i=0;i<childDataElement.length;i++){
+                  targetData = targetData[childDataElement[i]];
+                }
+                if(targetData && targetData.length>0){
+                  targetData = targetData[0];
+                }
+              }
             }
-            var fields = getSchema(data);
+            var fields = getSchema(targetData);
           }
           else{
+            console.log(error);
             req.flash('error', body);
           }
           req.session.dictionary.tables[req.session.temp.table].fields = fields;
