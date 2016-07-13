@@ -16,6 +16,7 @@ GitHub = new git({
 
 module.exports = {
   setSessionDictionary: function(req, res, next){
+    GitHub.authenticate({type: "oauth", token: req.session.token});
     var owner;
     if(req.user && req.user.username){
       owner = req.user.username;
