@@ -598,7 +598,16 @@ router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.set
     if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
        oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
     }
-    res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
+    var url = req.session.dictionary.auth_options.oauth_authorize_url;
+    url += "?client_id=";
+    url += req.session.temp.client_id;
+    url += "&" + oauth_redirect_url_parameter;
+    url += "=" + process.env.oauth_redirect_uri;
+    if(req.session.dictionary.auth_options.oauth_additional_params && req.session.dictionary.auth_options.oauth_additional_params !== "") {
+      url += "&";
+      url += req.session.dictionary.auth_options.oauth_additional_params;
+    }
+    res.redirect(url);
   }
 });
 
