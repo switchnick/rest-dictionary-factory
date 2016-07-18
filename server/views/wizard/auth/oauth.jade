@@ -30,3 +30,7 @@ input.form-control.auth-item(type="checkbox"
   checked=dictionary.auth_options.oauth_params_in_query==true
   data-provider="github" data-prop="auth_options.oauth_params_in_query")
 p.hint Check this if your OAuth provider requires parameters to be sent in the query string instead of the body
+label Additional Query String Parameters
+input.form-control.auth-params(type="text"
+  value=dictionary.auth_options.oauth_additional_params
+  data-provider="github" data-prop="auth_options.oauth_additional_params")

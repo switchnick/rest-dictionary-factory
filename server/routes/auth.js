@@ -60,6 +60,8 @@ router.use('/oauth', function(req, res){
     else{
       data.client_id = session.temp.client_id;
       data.client_secret = session.temp.client_secret;
+      data.grant_type = "authorization_code";
+      data.redirect_uri = process.env.oauth_redirect_uri;
       if(session.dictionary.auth_options.oauth_params_in_query){
         if(tokenUrl.indexOf("?")==-1){
           tokenUrl+="?";
@@ -87,7 +89,7 @@ router.use('/oauth', function(req, res){
         tokenUrl += process.env.oauth_redirect_uri;
       }
       console.log(tokenUrl);
-      request({url:tokenUrl, formData: data}, function(err, response, body){
+      request.post({url:tokenUrl, form: data}, function(err, response, body){
         if(err){
           console.log(err);
         }
