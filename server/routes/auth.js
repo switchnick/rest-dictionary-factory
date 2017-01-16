@@ -107,7 +107,7 @@ router.use('/oauth', function(req, res){
           if(req.user.username.indexOf("anon_")!=-1){
             req.logout();
           }
-          res.render('token.jade', {token: tokenData.access_token});
+          res.render('token.jade', {token: tokenData.access_token, refrehToken: tokenData.refresh_token});
         }
       });
     }
