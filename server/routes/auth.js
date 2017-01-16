@@ -54,6 +54,8 @@ router.use('/oauth', function(req, res){
           req.logout();
         }
         var tokenData = qs.parse(body);
+        console.log('Token Data');
+        console.log(tokenData);
         res.render('token.jade', {token: tokenData.oauth_token, tokenSecret: tokenData.oauth_token_secret});
       });
     }
