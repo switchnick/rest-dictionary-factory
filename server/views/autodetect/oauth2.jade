@@ -8,3 +8,7 @@ a.secondary-button(href="/api/testoauth/#{info._id}" target="_blank") Authorize
 label Access Token
 input.form-control.auth-item(type='text' data-provider="temp" data-prop="access_token" name='access_token' value="#{temp.access_token || ''}")
 p.hint Please enter the Access Token you should have recieved after Authorizing the application.
+if dictionary.auth_options.sign_requests && dictionary.auth_options.sign_requests == true
+  label Signing Key
+  input.form-control.auth-item(type='password' data-provider="temp" data-prop="signing_key" name='signing_key' value="#{temp.signing_key || ''}")
+  p.hint Some OAuth 2.0 applications require all requests to be signed. In these situations a Signing Key should be provided.

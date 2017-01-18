@@ -292,7 +292,12 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
         else{
           headers.Authorization = "Bearer "+ req.body.access_token;
         }
-
+        if(req.session.dictionary.auth_options.sign_requests == true){
+          oauthparams = {
+            consumer_secret: req.session.temp.signing_key,
+            token_secret: req.body.access_token
+          };
+        }
       }
       else{
         oauthparams = {
@@ -302,6 +307,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
           token_secret: req.body.token_secret
         };
       }
+      break;
     case "API Key":
       if(requestUrl.indexOf("?")==-1){
         requestUrl+="?";

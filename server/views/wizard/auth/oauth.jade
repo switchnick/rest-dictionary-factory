@@ -9,12 +9,19 @@ label Access Token Url
 input.form-control.auth-item(type='text' value="#{dictionary.auth_options.oauth_token_url || ''}" data-provider="github" data-prop="auth_options.oauth_token_url")
 p.hint The Url that can be used to exchange a given code for an Access Token. More information on OAuth 2.0 can be found
   a(href="") here
-label Uses Refresh Tokens
-br
-input.form-control.auth-item(type="checkbox"
-  checked=dictionary.auth_options.uses_refresh_token==true
-  data-provider="github" data-prop="auth_options.uses_refresh_token")
-br
+.row
+  .col-md-3
+    label Uses Refresh Tokens
+    br
+    input.form-control.auth-item(type="checkbox"
+      checked=dictionary.auth_options.uses_refresh_token==true
+      data-provider="github" data-prop="auth_options.uses_refresh_token")
+  .col-md-3
+    label Sign Requests
+    br
+    input.form-control.auth-item(type="checkbox"
+      checked=dictionary.auth_options.sign_requests==true
+      data-provider="github" data-prop="auth_options.sign_requests")
 if info.saved_credentials===true
   a(href="/api/removeoauthcreds/#{info._id}").inline.primary-button Remove OAuth Credentials
 else
