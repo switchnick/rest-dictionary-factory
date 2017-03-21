@@ -342,7 +342,9 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
     }
     else{
       try{
-        console.log('autodetect result');
+        console.log('autodetect result response');
+        console.log(response);
+        console.log('autodetect result body');
         console.log(body);
         var data = JSON.parse(body);
         if(req.session.dictionary.tables[req.session.temp.table].has_link_to_child && req.session.dictionary.tables[req.session.temp.table].has_link_to_child==true){
