@@ -336,11 +336,15 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
 
   Request(requestParams, function(error, response, body){
     if(error){
+      console.log('error in auto detection');
+      console.log(error);
       res.json({err: error});
     }
     else{
       try{
         var data = JSON.parse(body);
+        console.log('autodetect result');
+        console.log(data);
         if(req.session.dictionary.tables[req.session.temp.table].has_link_to_child && req.session.dictionary.tables[req.session.temp.table].has_link_to_child==true){
           var dataElement = req.session.dictionary.tables[req.session.temp.table].data_element_override.split(".");
           if(!dataElement){
