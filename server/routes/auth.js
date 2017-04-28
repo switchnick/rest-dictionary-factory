@@ -90,6 +90,7 @@ router.use('/oauth', function(req, res){
         tokenUrl += "=";
         tokenUrl += process.env.oauth_redirect_uri;
       }
+      console.log('token url is');
       console.log(tokenUrl);
       request.post({url:tokenUrl, form: data}, function(err, response, body){
         if(err){
