@@ -92,6 +92,8 @@ router.use('/oauth', function(req, res){
       }
       console.log('token url is');
       console.log(tokenUrl);
+      console.log('data is');
+      console.log(JSON.string(data));
       request.post({url:tokenUrl, form: data}, function(err, response, body){
         if(err){
           console.log(err);
