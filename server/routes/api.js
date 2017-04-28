@@ -585,11 +585,11 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
 });
 
 router.use('/oauth2_authorize/:id/done',  Auth.isLoggedIn, MongoHelper.getInfoAnon, GitHelper.setSessionDictionaryAnon, function(req, res, next){
-  if(req.body && req.body.client_secret){
-    req.session.temp.client_secret = req.body.client_secret;
-  }
   if(!req.session.temp.client_id){
     req.session.temp = JSON.parse(req.sessionStore.sessions[req.sessionID]).temp; //this is a bit dirty
+  }
+  if(req.body && req.body.client_secret){
+    req.session.temp.client_secret = req.body.client_secret;
   }
   var oauth_redirect_url_parameter = "redirect_uri";
   if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
