@@ -554,9 +554,12 @@ router.get('/oauth2_authorize/:id', function(req, res, next){
                         }
                         var url = req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri;
                         if(req.session.dictionary.auth_options.oauth_additional_params && req.session.dictionary.auth_options.oauth_additional_params !== "") {
+                          console.log('adding extra params to query string');
                           url += "&";
                           url += req.session.dictionary.auth_options.oauth_additional_params;
                         }
+                        console.log('oauth2 url is');
+                        console.log(url);
                         res.redirect(url);
                       }
                     });
