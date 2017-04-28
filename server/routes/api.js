@@ -595,7 +595,13 @@ router.use('/oauth2_authorize/:id/done',  Auth.isLoggedIn, MongoHelper.getInfoAn
   if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
      oauth_redirect_url_parameter = req.session.dictionary.auth_options.oauth_redirect_url_parameter
   }
-  res.redirect(req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri);
+  var url = req.session.dictionary.auth_options.oauth_authorize_url+"?client_id="+req.session.temp.client_id+"&"+oauth_redirect_url_parameter+"="+process.env.oauth_redirect_uri;
+  if(req.session.dictionary.auth_options.oauth_additional_params && req.session.dictionary.auth_options.oauth_additional_params !== "") {
+    console.log('adding extra params to query string');
+    url += "&";
+    url += req.session.dictionary.auth_options.oauth_additional_params;
+  }
+  res.redirect(url);
 });
 
 router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.setSessionDictionary, function(req, res, next){
