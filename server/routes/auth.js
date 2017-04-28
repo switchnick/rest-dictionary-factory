@@ -60,6 +60,8 @@ router.use('/oauth', function(req, res){
       });
     }
     else{
+      console.log('temp info is');
+      console.log(JSON.stringify(session.temp));
       data.client_id = session.temp.client_id;
       data.client_secret = session.temp.client_secret;
       data.grant_type = "authorization_code";
