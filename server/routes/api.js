@@ -633,6 +633,8 @@ router.use('/testoauth/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHelper.set
       url += "&";
       url += req.session.dictionary.auth_options.oauth_additional_params;
     }
+    console.log('test oauth url is');
+    console.log(url);
     res.redirect(url);
   }
 });
