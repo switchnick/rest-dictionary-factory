@@ -15,6 +15,8 @@ var express = require('express'),
     Request = require('request'),
     qs = require('querystring'),
     busboy = require('connect-busboy'),
+    CryptoJS = require('crypto-js'),
+    crypto = require('crypto'),
     MongoHelper = require('../controllers/mongo-helper');
 
 router.get('/', function(req, res){
@@ -266,7 +268,8 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
   var oauthparams;
   var headers = {
     "Content-Type": "application/json",
-    "User-Agent": "rest-dictionary-factory"
+    "User-Agent": "rest-dictionary-factory",
+    "Accept": "*/*"
   };
   console.log("Auth method - "+ req.session.dictionary.auth_method);
   switch (req.session.dictionary.auth_method) {
@@ -279,7 +282,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
       break;
     case "OAuth":
       if(req.session.dictionary.auth_options.auth_version=="2.0"){
-        if(req.session.dictionary.auth_options.oauth_params_in_query){
+        if(req.session.dictionary.auth_options.oauth_params_in_query === true){
           if(requestUrl.indexOf("?")==-1){
             requestUrl+="?";
           }
@@ -293,10 +296,14 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
           headers.Authorization = "Bearer "+ req.body.access_token;
         }
         if(req.session.dictionary.auth_options.sign_requests == true){
-          oauthparams = {
-            consumer_secret: req.session.temp.signing_key,
-            token_secret: req.body.access_token
-          };
+          var signingParams = getSigningParams(req.session.temp.signing_key, req.body.access_token, "GET", requestUrl);
+          headers["X-Nonce"] = signingParams.nonce;
+          headers["X-Signature"] = signingParams.signature;
+          headers["Content-Type"] = "application/x-www-form-urlencoded";
+          // oauthparams = {
+          //   // consumer_secret: req.session.temp.signing_key,
+          //   token: req.body.access_token
+          // };
         }
       }
       else{
@@ -342,8 +349,6 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
     }
     else{
       try{
-        console.log('autodetect result response');
-        console.log(response);
         console.log('autodetect result body');
         console.log(body);
         var data = JSON.parse(body);
@@ -588,12 +593,10 @@ router.use('/oauth2_authorize/:id/done',  Auth.isLoggedIn, MongoHelper.getInfoAn
   if(!req.session.temp.client_id){
     req.session.temp = JSON.parse(req.sessionStore.sessions[req.sessionID]).temp; //this is a bit dirty
   }
-  console.log('body is');
   JSON.stringify(req.body);
   if(req.body && req.body.client_secret){
     req.session.temp.client_secret = req.body.client_secret;
   }
-  console.log('temp is');
   JSON.stringify(req.session.temp);
   var oauth_redirect_url_parameter = "redirect_uri";
   if(req.session.dictionary.auth_options.oauth_redirect_url_parameter && req.session.dictionary.auth_options.oauth_redirect_url_parameter!=""){
@@ -762,6 +765,49 @@ var randomString = function(length) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return text;
+}
+
+function getSigningParams(secret, token, method, url, body){
+  //create the signature base string
+  var baseString = method.toUpperCase();
+  baseString += "&";
+  baseString += qs.escape(url.split("?")[0]);
+  baseString += "&";
+  var params = {};
+  if(url.split("?")[1]){
+    //we should only have one here (access token)
+    var urlParams = url.split("?")[1];
+    params[qs.escape(urlParams.split("=")[0])] = params.escape(urlParams.split("=")[1]);
+  }
+  if(body){
+    for (var key in body){
+      params[qs.escape(key)] = qs.escape(body[key]);
+    }
+  }
+  console.log(params);
+  baseString += qs.stringify(params);
+  //create the nonce
+  var nonce = randomString(32);
+  baseString += "&";
+  baseString += nonce;
+  console.log("base string");
+  console.log(baseString);
+  //create the signing key
+  var key = qs.escape(secret);
+  key += "&";
+  key += qs.escape(token);
+  console.log("signing key");
+  console.log(key);
+  //create the signature
+  var hash = crypto.createHmac("sha1", key).update(baseString).digest("base64");
+  // var signature = new Buffer(hash);
+  // console.log(signature.toString('base64'));
+  console.log('hash');
+  console.log(hash);
+  return {
+    signature: hash,
+    nonce: nonce
+  }
 }
 
 module.exports = router;
