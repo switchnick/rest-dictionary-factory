@@ -111,7 +111,7 @@ router.use('/oauth', function(req, res){
           console.log(responseData);
           var tokenData = getTokens(responseData);
           console.log(tokenData);
-          if(req.user.username.indexOf("anon_")!=-1){
+          if(req.user && req.user.username.indexOf("anon_")!=-1){
             req.logout();
           }
           res.render('token.jade', {token: tokenData.access_token, refrehToken: tokenData.refresh_token});
@@ -120,7 +120,7 @@ router.use('/oauth', function(req, res){
     }
   }
   else{
-    if(req.user.username.indexOf("anon_")!=-1){
+    if(req.user && req.user.username.indexOf("anon_")!=-1){
       req.logout();
     }
     res.render('token.jade', {tokenInfo: req.body});
