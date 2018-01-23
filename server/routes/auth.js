@@ -98,6 +98,7 @@ router.use('/oauth', function(req, res){
       console.log(JSON.stringify(data));
       request.post({url:tokenUrl, form: data}, function(err, response, body){
         if(err){
+          console.log("Error exchanging code for token")
           console.log(err);
         }
         else{

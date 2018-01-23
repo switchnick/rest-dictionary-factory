@@ -42,5 +42,18 @@ include ../errorbanner.jade
           when "OAuth"
             include ./auth/oauth.jade
           default
-            include ./auth/none.jade                         
+            include ./auth/none.jade   
+  .vertical-spacer
+  .card
+    .row
+      .col-md-12
+        .vertical-spacer  
+        label Additional Headers
+        input.form-control.auth-item(type='text' value="#{dictionary.auth_options.additional_headers || ''}" data-provider="github" data-prop="auth_options.additional_headers")
+        p.hint If you need to send additional headers with a request you can add them here with a format of 
+          strong header-name=value
+          |. To add parameterised values use the format 
+          strong header-name=$
+          |. Parameterised values will appear as extra inputs when creating a connection. Multiple values should be comma separated.
+  .vertical-spacer  
 include ../footer.jade
