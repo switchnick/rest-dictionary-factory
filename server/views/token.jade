@@ -1,15 +1,18 @@
 include ./header.jade
 div.container.page
   .card.token-card
-    h1 Access Token
-    span #{token}
-    p.hint You can now use this Token in the auto detect feature in the factory or to create the connection in Qlik Sense.
-    if tokenSecret
-      h1 Token Secret
-      span #{tokenSecret}
-      p.hint You can now use this Token Secret along with the above token in the auto detect feature in the factory or to create the connection in Qlik Sense.
-    if refrehToken
-      h1 Refresh Token
-      span #{refrehToken}
-      p.hint You can now use this Refresh Token in the auto detect feature in the factory or to create the connection in Qlik Sense.
+    each val, key in tokenData
+      h1 #{key}
+      span #{val}
+    //- h1 Access Token
+    //- span #{token}
+    //- p.hint You can now use this Token in the auto detect feature in the factory or to create the connection in Qlik Sense.
+    //- if tokenSecret
+    //-   h1 Token Secret
+    //-   span #{tokenSecret}
+    //-   p.hint You can now use this Token Secret along with the above token in the auto detect feature in the factory or to create the connection in Qlik Sense.
+    //- if refrehToken
+    //-   h1 Refresh Token
+    //-   span #{refrehToken}
+    //-   p.hint You can now use this Refresh Token in the auto detect feature in the factory or to create the connection in Qlik Sense.
 include ./footer.jade

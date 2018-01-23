@@ -114,7 +114,8 @@ router.use('/oauth', function(req, res){
           if(req.user && req.user.username.indexOf("anon_")!=-1){
             req.logout();
           }
-          res.render('token.jade', {token: tokenData.access_token, refrehToken: tokenData.refresh_token});
+          // res.render('token.jade', {token: tokenData.access_token, refrehToken: tokenData.refresh_token});
+          res.render('token.jade', {tokenData: tokenData});
         }
       });
     }
@@ -123,7 +124,8 @@ router.use('/oauth', function(req, res){
     if(req.user && req.user.username.indexOf("anon_")!=-1){
       req.logout();
     }
-    res.render('token.jade', {tokenInfo: req.body});
+    // res.render('token.jade', {tokenInfo: req.body});
+    res.render('token.jade', {tokenData: req.body});
   }
 });
 
