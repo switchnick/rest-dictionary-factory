@@ -103,14 +103,14 @@ router.use('/oauth', function(req, res){
         else{
           var responseData;
           if(body.indexOf("{")!=-1){
-            responseData = JSON.parse(body);
+            tokenData = JSON.parse(body);
           }
           else{
-            responseData = qs.parse(body);
+            tokenData = qs.parse(body);
           }
           console.log(responseData);
-          var tokenData = getTokens(responseData);
-          console.log(tokenData);
+          // var tokenData = getTokens(responseData);
+          // console.log(tokenData);
           if(req.user && req.user.username.indexOf("anon_")!=-1){
             req.logout();
           }
