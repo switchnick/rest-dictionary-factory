@@ -19,7 +19,15 @@
             if dictionary.auth_options.auth_version=="1.0"
               include ./autodetect/oauth1.jade
             else          
-              include ./autodetect/oauth2.jade          
+              include ./autodetect/oauth2.jade     
+      .vertical-spacer
+      div
+        h3 Additional Headers
+        each header in dictionary.auth_options.additional_headers.split(",")
+          if header.split("=")[1]=="$"
+            label #{header.split("=")[0]}
+            input.form-control.auth-item(type='text' data-provider="temp" data-prop=`header_${header.split("=")[0]}` name='consumer_key')
+      .vertical-spacer
       .center
         button.inline.primary-button.autodetect-auth-ok(type="submit") OK
         button.inline.primary-button.autodetect-auth-cancel(type="button") Cancel

@@ -50,7 +50,7 @@ router.use('/oauth', function(req, res){
         verifier: data.oauth_verifier
       };
       request.post({url:tokenUrl, oauth:oauthparams}, function(err, response, body){
-        if(req.user.username.indexOf("anon_")!=-1){
+        if(req.user && req.user.username.indexOf("anon_")!=-1){
           req.logout();
         }
         var tokenData = qs.parse(body);

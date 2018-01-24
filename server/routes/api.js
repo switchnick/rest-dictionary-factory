@@ -322,6 +322,24 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
     default:
 
   }
+  if(req.session.dictionary.auth_options.additional_headers && req.session.dictionary.auth_options.additional_headers!=""){
+    var customHeaders = req.session.dictionary.auth_options.additional_headers.split(",")
+    for (var i = 0; i < customHeaders.length; i++) {
+      var split = customHeaders[i].split("=")
+      if(split[1]!="$"){
+        headers[split[0]] = split[1]
+      }
+    }
+    for (var key in req.session.temp){
+      if(key.indexOf("header_")!==-1){
+        var hName = key.replace("header_", "")
+        var hValue = req.session.temp[key]
+        headers[hName] = hValue
+      }
+    }
+    console.log('Sending Custom Headers');
+    console.log(headers);
+  }
   var requestParams = {
     rejectUnauthorized: false,
     url: requestUrl,
