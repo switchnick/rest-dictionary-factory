@@ -377,7 +377,7 @@ router.post('/autodetectfields/:id', Auth.isLoggedIn, MongoHelper.getInfo, GitHe
               data = data[dataElement[i]];
             }
             var childUrl
-            if(childUrl.index('http')==-1){
+            if(data[0][urlProp].index('http')==-1){
               childUrl = Test.buildChildUrl(req, data[0][urlProp])
             }
             else {
